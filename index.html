@@ -567,62 +567,359 @@
             <!-- ========================================================= -->
             <!-- TAB 5: ANALYTICS -->
             <!-- ========================================================= -->
+                        <!-- ========================================================= -->
+            <!-- TAB 5: ANALYTICS (StudyStreak Style & Week-over-Week) -->
+            <!-- ========================================================= -->
             <div id="tab-analytics" class="tab-content hidden space-y-6 animate-fadeIn">
-                <div class="bg-white p-6 md:p-8 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] space-y-6">
-                    
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-2xl bg-pink-50 border border-pink-100 flex items-center justify-center text-2xl shadow-2xs text-pink-600">
-                                📊
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold text-stone-900">מדדי דיוק והתקדמות</h3>
-                                <p class="text-xs text-stone-500">מעקב אחוזי הצלחה נפרד לפרקי כמותי ולפרקי מילולי</p>
-                            </div>
+
+                <!-- Top Hero Banner with Filter Pills (like StudyStreak) -->
+                <div class="bg-gradient-to-r from-pink-600 via-rose-600 to-pink-800 p-6 md:p-8 rounded-3xl text-white shadow-xl relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-80 h-80 bg-white/10 rounded-full blur-3xl -ml-20 -mt-20 pointer-events-none"></div>
+                    <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <div class="text-pink-200 text-xs font-bold uppercase tracking-wider mb-1">לוח בקרה וניתוח למידה</div>
+                            <h2 class="text-2xl md:text-3xl font-extrabold flex items-center gap-2">
+                                <span>📊</span> סיכום סטטיסטי ותובנות פסיכומטרי
+                            </h2>
+                            <p id="analytics-filter-subtitle" class="text-pink-100 text-xs mt-1">
+                                כל הנתונים וההתקדמות שלך בכל הזמנים 🌟
+                            </p>
+                        </div>
+                        
+                        <!-- Filter Pills -->
+                        <div class="flex items-center gap-1.5 bg-black/20 backdrop-blur-md p-1.5 rounded-2xl border border-white/15 text-xs font-bold">
+                            <button type="button" id="filter-btn-all" onclick="setAnalyticsFilter('all')" class="px-3.5 py-1.5 rounded-xl transition-all bg-white text-pink-700 shadow-xs">
+                                כל הזמנים 🌟
+                            </button>
+                            <button type="button" id="filter-btn-week" onclick="setAnalyticsFilter('week')" class="px-3.5 py-1.5 rounded-xl transition-all text-white/90 hover:text-white hover:bg-white/10">
+                                השבוע 🗓️
+                            </button>
+                            <button type="button" id="filter-btn-month" onclick="setAnalyticsFilter('month')" class="px-3.5 py-1.5 rounded-xl transition-all text-white/90 hover:text-white hover:bg-white/10">
+                                30 יום ⏱️
+                            </button>
                         </div>
                     </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="p-5 bg-gradient-to-br from-blue-50/80 to-indigo-50/40 rounded-3xl border border-blue-100 space-y-2">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs font-bold text-blue-900 flex items-center gap-1.5">
-                                    <span>📐</span> חשיבה כמותית (מתוך 20)
-                                </span>
-                                <span id="stat-quant-count" class="text-xs text-blue-600 font-bold">0 פרקים</span>
-                            </div>
-                            <div class="flex items-baseline justify-between pt-2">
-                                <div id="stat-quant-avg" class="text-3xl font-black text-blue-950">- / 20</div>
-                                <div id="stat-quant-pct" class="text-base font-black text-blue-700">- דיוק</div>
-                            </div>
-                        </div>
-
-                        <div class="p-5 bg-gradient-to-br from-purple-50/80 to-pink-50/40 rounded-3xl border border-purple-100 space-y-2">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs font-bold text-purple-900 flex items-center gap-1.5">
-                                    <span>📖</span> חשיבה מילולית (מתוך 23)
-                                </span>
-                                <span id="stat-verbal-count" class="text-xs text-purple-600 font-bold">0 פרקים</span>
-                            </div>
-                            <div class="flex items-baseline justify-between pt-2">
-                                <div id="stat-verbal-avg" class="text-3xl font-black text-purple-950">- / 23</div>
-                                <div id="stat-verbal-pct" class="text-base font-black text-purple-700">- דיוק</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500">
-                        <span>גיבוי וסנכרון ענן</span>
-                        <div class="flex gap-3">
-                            <button onclick="exportData()" class="text-pink-600 font-bold hover:underline">ייצוא קובץ גיבוי 💾</button>
-                            <span>•</span>
-                            <label class="text-pink-600 font-bold hover:underline cursor-pointer">
-                                ייבוא גיבוי 📥
-                                <input type="file" class="hidden" accept=".json" onchange="importData(event)">
-                            </label>
-                        </div>
-                    </div>
-
                 </div>
+
+                <!-- 4 KPI Summary Metric Cards (StudyStreak Style) -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+                    <!-- 1. Total Study Hours -->
+                    <div class="bg-white p-5 rounded-3xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] border border-stone-100">
+                        <div class="text-stone-400 text-xs font-semibold mb-1 flex items-center justify-between">
+                            <span>זמן תרגול כולל</span>
+                            <span>⏱️</span>
+                        </div>
+                        <div id="stat-total-time" class="text-2xl md:text-3xl font-black text-pink-600">0 דק'</div>
+                        <div id="stat-total-sessions" class="text-[11px] text-stone-500 font-medium mt-1">0 פעילויות מתועדות</div>
+                    </div>
+
+                    <!-- 2. Weighted Accuracy -->
+                    <div class="bg-white p-5 rounded-3xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] border border-stone-100">
+                        <div class="text-stone-400 text-xs font-semibold mb-1 flex items-center justify-between">
+                            <span>דיוק משוקלל</span>
+                            <span>🎯</span>
+                        </div>
+                        <div id="stat-weighted-accuracy" class="text-2xl md:text-3xl font-black text-rose-600">- %</div>
+                        <div id="stat-accuracy-status" class="text-[11px] text-stone-500 font-medium mt-1">מכלל שאלות הפרקים</div>
+                    </div>
+
+                    <!-- 3. Weekly Goals Completion -->
+                    <div class="bg-white p-5 rounded-3xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] border border-stone-100">
+                        <div class="text-stone-400 text-xs font-semibold mb-1 flex items-center justify-between">
+                            <span>עמידה ביעדי השבוע</span>
+                            <span>🏆</span>
+                        </div>
+                        <div id="stat-goals-rate" class="text-2xl md:text-3xl font-black text-amber-500">0%</div>
+                        <div id="stat-goals-summary" class="text-[11px] text-stone-500 font-medium mt-1">חיבורים, פרקים וחישוב</div>
+                    </div>
+
+                    <!-- 4. Peak Study Hour -->
+                    <div class="bg-white p-5 rounded-3xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] border border-stone-100">
+                        <div class="text-stone-400 text-xs font-semibold mb-1 flex items-center justify-between">
+                            <span>שעת שיא בתרגול</span>
+                            <span>🕒</span>
+                        </div>
+                        <div id="stat-peak-hour" class="text-2xl md:text-3xl font-black text-indigo-600">--:--</div>
+                        <div id="stat-peak-period" class="text-[11px] text-stone-500 font-medium mt-1">הזמן שבו את הכי מפוקסת</div>
+                    </div>
+                </div>
+
+                <!-- ========================================================= -->
+                <!-- WEEK-OVER-WEEK TRACKER & COMPARISON -->
+                <!-- ========================================================= -->
+                <div class="bg-white p-6 md:p-8 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] space-y-5">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                        <div>
+                            <h3 class="text-xl font-bold text-stone-900 flex items-center gap-2">
+                                <span>📅</span> מעקב והשוואה שבוע מול שבוע (Week-over-Week)
+                            </h3>
+                            <p class="text-xs text-stone-500 mt-0.5">מעקב רציף אחר השגת היעדים השבועיים (א'-ש') והשוואת קצב ההתקדמות</p>
+                        </div>
+                        <div id="week-streak-badge" class="px-3 py-1.5 rounded-xl bg-pink-50 text-pink-700 border border-pink-200 text-xs font-bold flex items-center gap-1.5">
+                            <span>🔥</span> רצף שבועי פעיל
+                        </div>
+                    </div>
+
+                    <!-- Week Comparison Delta Card (This Week vs Last Week) -->
+                    <div id="week-comparison-banner" class="p-4 md:p-5 rounded-2xl bg-gradient-to-r from-rose-50/80 via-pink-50/60 to-purple-50/60 border border-rose-200/70">
+                        <!-- Injected dynamically in JS -->
+                    </div>
+
+                    <!-- Weekly History Timeline List -->
+                    <div>
+                        <div class="text-xs font-bold text-stone-500 mb-3 flex items-center justify-between">
+                            <span>היסטוריית שבועות (ביצועי כל שבוע מראשון עד שבת):</span>
+                            <span class="text-[11px] text-pink-600 font-medium">יעדים: 2 חיבורים | 4 פרקים | חישוב יומי</span>
+                        </div>
+                        <div id="weekly-history-list" class="space-y-3">
+                            <!-- Injected dynamically in JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================================= -->
+                <!-- HOURLY ACTIVITY CHART (StudyStreak Exact Style) -->
+                <!-- ========================================================= -->
+                <div class="bg-white p-6 md:p-8 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                        <div>
+                            <h3 class="text-xl font-bold text-stone-900 flex items-center gap-2">
+                                <span>🕒</span> התפלגות שעות התרגול שלך
+                            </h3>
+                            <p class="text-xs text-stone-500 mt-0.5">באיזה שעות ביום את מבצעת פרקים, חיבורים ותרגולי חישוב?</p>
+                        </div>
+                        <div id="peak-hour-chip" class="bg-pink-50 text-pink-700 border border-pink-200 px-3 py-1.5 rounded-xl text-xs font-bold">
+                            ⚡ שעת שיא: --:--
+                        </div>
+                    </div>
+
+                    <!-- 4 Day-Part Buckets (Morning, Afternoon, Evening, Night) -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3" id="hour-buckets-grid">
+                        <!-- Injected dynamically in JS -->
+                    </div>
+
+                    <!-- 24-Hour Vertical Bar Chart -->
+                    <div>
+                        <div class="text-xs font-bold text-stone-500 mb-2">גרף שעות ביממה (00:00 עד 23:00):</div>
+                        <div id="hourly-bars-chart" class="flex items-end gap-1 h-32 bg-stone-50 p-3 rounded-2xl border border-stone-200/50 overflow-x-auto">
+                            <!-- Injected dynamically in JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================================= -->
+                <!-- DOMAIN BREAKDOWN: QUANTITATIVE VS VERBAL -->
+                <!-- ========================================================= -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Quantitative Card -->
+                    <div class="bg-white p-6 md:p-8 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-xl text-blue-600">
+                                    📐
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-stone-900">חשיבה כמותית</h4>
+                                    <p class="text-xs text-stone-500">20 שאלות לפרק (ללא אנגלית)</p>
+                                </div>
+                            </div>
+                            <span id="stat-quant-count" class="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-xl text-xs font-bold">0 פרקים</span>
+                        </div>
+
+                        <div class="p-4 bg-blue-50/50 rounded-2xl border border-blue-100 flex items-baseline justify-between">
+                            <div>
+                                <div class="text-xs text-blue-900/70 font-semibold mb-0.5">ממוצע תשובות נכונות</div>
+                                <div id="stat-quant-avg" class="text-3xl font-black text-blue-950">- / 20</div>
+                            </div>
+                            <div class="text-left">
+                                <div class="text-xs text-blue-900/70 font-semibold mb-0.5">אחוז דיוק</div>
+                                <div id="stat-quant-pct" class="text-2xl font-black text-blue-700">-%</div>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-xs font-bold text-stone-600">
+                                <span>קצב הצלחה מתוך 20</span>
+                                <span id="stat-quant-ratio-text">0 / 20</span>
+                            </div>
+                            <div class="w-full bg-stone-100 rounded-full h-3 overflow-hidden">
+                                <div id="stat-quant-bar" class="bg-gradient-to-r from-blue-500 to-indigo-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Record -->
+                        <div class="pt-3 border-t border-stone-100 flex justify-between items-center text-xs">
+                            <span class="text-stone-500 font-medium">שיא אישי בפרק כמותי:</span>
+                            <span id="stat-quant-best" class="font-bold text-blue-900 bg-blue-50 px-2.5 py-1 rounded-xl">--</span>
+                        </div>
+                    </div>
+
+                    <!-- Verbal Card -->
+                    <div class="bg-white p-6 md:p-8 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center text-xl text-purple-600">
+                                    📖
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-stone-900">חשיבה מילולית</h4>
+                                    <p class="text-xs text-stone-500">23 שאלות לפרק (אנלוגיות, הבנה והסקה)</p>
+                                </div>
+                            </div>
+                            <span id="stat-verbal-count" class="px-2.5 py-1 bg-purple-50 text-purple-700 rounded-xl text-xs font-bold">0 פרקים</span>
+                        </div>
+
+                        <div class="p-4 bg-purple-50/50 rounded-2xl border border-purple-100 flex items-baseline justify-between">
+                            <div>
+                                <div class="text-xs text-purple-900/70 font-semibold mb-0.5">ממוצע תשובות נכונות</div>
+                                <div id="stat-verbal-avg" class="text-3xl font-black text-purple-950">- / 23</div>
+                            </div>
+                            <div class="text-left">
+                                <div class="text-xs text-purple-900/70 font-semibold mb-0.5">אחוז דיוק</div>
+                                <div id="stat-verbal-pct" class="text-2xl font-black text-purple-700">-%</div>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-xs font-bold text-stone-600">
+                                <span>קצב הצלחה מתוך 23</span>
+                                <span id="stat-verbal-ratio-text">0 / 23</span>
+                            </div>
+                            <div class="w-full bg-stone-100 rounded-full h-3 overflow-hidden">
+                                <div id="stat-verbal-bar" class="bg-gradient-to-r from-purple-500 to-pink-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Record -->
+                        <div class="pt-3 border-t border-stone-100 flex justify-between items-center text-xs">
+                            <span class="text-stone-500 font-medium">שיא אישי בפרק מילולי:</span>
+                            <span id="stat-verbal-best" class="font-bold text-purple-900 bg-purple-50 px-2.5 py-1 rounded-xl">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================================= -->
+                <!-- MISTAKE ANALYSIS & PEDAGOGICAL TIPS -->
+                <!-- ========================================================= -->
+                <div class="bg-white p-6 md:p-8 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] space-y-5">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                        <div>
+                            <h3 class="text-xl font-bold text-stone-900 flex items-center gap-2">
+                                <span>🔍</span> פילוח גורמי הטעויות בתחקורים
+                            </h3>
+                            <p class="text-xs text-stone-500 mt-0.5">ניתוח הסיבות שגרמו לטעויות בפרקים שפתרת, כדי לדעת איפה למקד את הליטוש</p>
+                        </div>
+                        <div id="top-mistake-pill" class="px-3 py-1.5 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold">
+                            טרם תועדו טעויות
+                        </div>
+                    </div>
+
+                    <div id="mistake-bars-container" class="space-y-3">
+                        <!-- Injected dynamically in JS -->
+                    </div>
+
+                    <div id="mistake-smart-tip" class="p-4 rounded-2xl bg-amber-50/80 border border-amber-200 text-xs text-amber-900 leading-relaxed">
+                        💡 <strong>טיפ תחקור:</strong> בכל פעם שאת טועה משום "חוסר תשומת לב", סמני במרקר את מילות ההוראה ("חוץ מ-", "אינו בהכרח", "נכון תמיד") לפני שאת קוראת את התשובות!
+                    </div>
+                </div>
+
+                <!-- ========================================================= -->
+                <!-- PERSONAL RECORDS (שיאים אישיים) -->
+                <!-- ========================================================= -->
+                <div class="bg-white p-6 md:p-8 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.03)] space-y-5">
+                    <div>
+                        <h3 class="text-xl font-bold text-stone-900 flex items-center gap-2">
+                            <span>🏆</span> לוח שיאים אישיים והישגים
+                        </h3>
+                        <p class="text-xs text-stone-500 mt-0.5">הרגעים והציונים הכי טובים שלך במסע לפסיכומטרי</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div class="p-4 rounded-2xl bg-rose-50/60 border border-rose-100 text-center space-y-1">
+                            <div class="text-2xl">📐</div>
+                            <div class="text-xs font-bold text-stone-600">שיא פרק כמותי</div>
+                            <div id="rec-quant-score" class="text-xl font-black text-rose-700">- / 20</div>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-purple-50/60 border border-purple-100 text-center space-y-1">
+                            <div class="text-2xl">📖</div>
+                            <div class="text-xs font-bold text-stone-600">שיא פרק מילולי</div>
+                            <div id="rec-verbal-score" class="text-xl font-black text-purple-700">- / 23</div>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-amber-50/60 border border-amber-100 text-center space-y-1">
+                            <div class="text-2xl">🔥</div>
+                            <div class="text-xs font-bold text-stone-600">רצף יומי שיא</div>
+                            <div id="rec-streak-days" class="text-xl font-black text-amber-700">0 ימים</div>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-100 text-center space-y-1">
+                            <div class="text-2xl">⚡</div>
+                            <div class="text-xs font-bold text-stone-600">היום הכי פורה</div>
+                            <div id="rec-best-day" class="text-sm font-black text-emerald-800 pt-1">--</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================================= -->
+                <!-- MOTIVATION & STUDY HACKS HUB (רעיונות ושיפור למידה) -->
+                <!-- ========================================================= -->
+                <div class="bg-gradient-to-br from-pink-500/10 via-rose-500/5 to-white p-6 md:p-8 rounded-3xl border border-pink-200/80 shadow-[0_4px_20px_-4px_rgba(244,63,94,0.06)] space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-2xl">💡</span>
+                            <div>
+                                <h3 class="text-lg font-bold text-stone-900">ארגז כלים מנצח למוטיבציה ולמידה בפסיכומטרי</h3>
+                                <p class="text-xs text-stone-500">עקרונות מוכחים מחקרית לשמירה על אנרגיה וקפיצה בציון</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+                        <div class="p-4 rounded-2xl bg-white border border-stone-200/70 shadow-xs space-y-1.5">
+                            <div class="text-xs font-bold text-pink-700 flex items-center gap-1.5">
+                                <span>📕</span> שיטת "הספר האדום"
+                            </div>
+                            <p class="text-[11px] text-stone-600 leading-relaxed">
+                                לפני כל פרק חדש, הקדישי בדיוק 2 דקות לקריאת 3 הלקחים האחרונים שרשמת בתחקורים. זה מונע 80% מהישנות הטעויות!
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-white border border-stone-200/70 shadow-xs space-y-1.5">
+                            <div class="text-xs font-bold text-rose-700 flex items-center gap-1.5">
+                                <span>⏱️</span> כלל 45 השניות
+                            </div>
+                            <p class="text-[11px] text-stone-600 leading-relaxed">
+                                אם אחרי 45 שניות אין לך כיוון פתרון ברור לשאלה בכמותי – סמני ניחוש מושכל, סמני את מספר השאלה, והמשיכי מיד הלאה. אל תיתקעי!
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-white border border-stone-200/70 shadow-xs space-y-1.5">
+                            <div class="text-xs font-bold text-indigo-700 flex items-center gap-1.5">
+                                <span>🎯</span> מיקרו-סימולציות מדורגות
+                            </div>
+                            <p class="text-[11px] text-stone-600 leading-relaxed">
+                                במקום לפתור רק פרקים בודדים, שלבי פעם בשבוע פתירת 2 פרקים ברצף (40 דק') ללא הפסקה לבניית כושר ריכוז מנטלי.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Backup & Cloud Sync Management -->
+                <div class="bg-white p-5 rounded-3xl border border-stone-100 flex items-center justify-between text-xs text-stone-500 shadow-2xs">
+                    <div class="flex items-center gap-2">
+                        <span>☁️</span>
+                        <span>סנכרון ענן חי פועל אוטומטית בין המחשב לטלפון</span>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="exportData()" class="text-pink-600 font-bold hover:underline">ייצוא קובץ גיבוי 💾</button>
+                        <span>•</span>
+                        <label class="text-pink-600 font-bold hover:underline cursor-pointer">
+                            ייבוא גיבוי 📥
+                            <input type="file" class="hidden" accept=".json" onchange="importData(event)">
+                        </label>
+                    </div>
+                </div>
+
             </div>
 
         </main>
@@ -1713,34 +2010,8 @@
                 }).join('');
             document.getElementById('tab-sections-list').innerHTML = sectionListHtml;
 
-            // 7. Accuracy Analytics
-            const quantSecs = (appData.sections || []).filter(s => s.type === 'quantitative');
-            const verbalSecs = (appData.sections || []).filter(s => s.type === 'verbal');
-            
-            document.getElementById('stat-quant-count').innerText = `${quantSecs.length} פרקים`;
-            document.getElementById('stat-verbal-count').innerText = `${verbalSecs.length} פרקים`;
-
-            if (quantSecs.length > 0) {
-                const qSum = quantSecs.reduce((a, c) => a + (c.correct || 0), 0);
-                const qAvg = (qSum / quantSecs.length).toFixed(1);
-                const qPct = Math.round((qSum / (quantSecs.length * 20)) * 100);
-                document.getElementById('stat-quant-avg').innerText = `${qAvg} / 20`;
-                document.getElementById('stat-quant-pct').innerText = `${qPct}% דיוק`;
-            } else {
-                document.getElementById('stat-quant-avg').innerText = '- / 20';
-                document.getElementById('stat-quant-pct').innerText = '-';
-            }
-
-            if (verbalSecs.length > 0) {
-                const vSum = verbalSecs.reduce((a, c) => a + (c.correct || 0), 0);
-                const vAvg = (vSum / verbalSecs.length).toFixed(1);
-                const vPct = Math.round((vSum / (verbalSecs.length * 23)) * 100);
-                document.getElementById('stat-verbal-avg').innerText = `${vAvg} / 23`;
-                document.getElementById('stat-verbal-pct').innerText = `${vPct}% דיוק`;
-            } else {
-                document.getElementById('stat-verbal-avg').innerText = '- / 23';
-                document.getElementById('stat-verbal-pct').innerText = '-';
-            }
+                        // 7. Enhanced Analytics & Week-over-Week Tracker (StudyStreak Style)
+            renderAnalyticsSection();
 
             // 8. Dashboard Recent Activity List
             const recentActs = [];
@@ -1766,6 +2037,550 @@
         }
 
         // Initialize on DOM load
+                // -------------------------------------------------------------
+        // Enhanced Analytics & Week-over-Week Tracker Logic
+        // -------------------------------------------------------------
+        let currentAnalyticsFilter = 'all'; // 'all', 'week', 'month'
+
+        function setAnalyticsFilter(f) {
+            currentAnalyticsFilter = f;
+            const btnAll = document.getElementById('filter-btn-all');
+            const btnWeek = document.getElementById('filter-btn-week');
+            const btnMonth = document.getElementById('filter-btn-month');
+            const subtitle = document.getElementById('analytics-filter-subtitle');
+
+            if (btnAll && btnWeek && btnMonth) {
+                btnAll.className = f === 'all' 
+                    ? 'px-3.5 py-1.5 rounded-xl transition-all bg-white text-pink-700 shadow-xs' 
+                    : 'px-3.5 py-1.5 rounded-xl transition-all text-white/90 hover:text-white hover:bg-white/10';
+                btnWeek.className = f === 'week' 
+                    ? 'px-3.5 py-1.5 rounded-xl transition-all bg-white text-pink-700 shadow-xs' 
+                    : 'px-3.5 py-1.5 rounded-xl transition-all text-white/90 hover:text-white hover:bg-white/10';
+                btnMonth.className = f === 'month' 
+                    ? 'px-3.5 py-1.5 rounded-xl transition-all bg-white text-pink-700 shadow-xs' 
+                    : 'px-3.5 py-1.5 rounded-xl transition-all text-white/90 hover:text-white hover:bg-white/10';
+            }
+
+            if (subtitle) {
+                if (f === 'all') subtitle.innerText = 'כל הנתונים וההתקדמות שלך בכל הזמנים 🌟';
+                else if (f === 'week') subtitle.innerText = 'נתוני השבוע הנוכחי בלבד (ראשון עד שבת) 🗓️';
+                else subtitle.innerText = 'נתוני 30 הימים האחרונים ⏱️';
+            }
+
+            renderAnalyticsSection();
+        }
+
+        function getWeekOverWeekHistory() {
+            const now = new Date();
+            const weeks = [];
+
+            // Build the last 5 weeks (Week 0 = current, Week 1 = last week, etc.)
+            for (let i = 0; i < 5; i++) {
+                const d = new Date(now);
+                d.setDate(d.getDate() - (i * 7));
+                const { start, end } = getWeekBounds(d);
+                
+                const inThisWeek = (itemDateStr) => {
+                    if (!itemDateStr) return false;
+                    const dt = new Date(itemDateStr);
+                    return !isNaN(dt.getTime()) && dt >= start && dt <= end;
+                };
+
+                const essays = (appData.essays || []).filter(e => inThisWeek(e.date || e.createdAt));
+                const sections = (appData.sections || []).filter(s => inThisWeek(s.date || s.createdAt));
+                const mathLogs = (appData.mentalMathLogs || []).filter(m => inThisWeek(m.date || m.timestamp));
+                const mathDays = new Set(mathLogs.map(m => m.date)).size;
+
+                const totalMins = (sections.length * 20) + (essays.length * 30) + (mathLogs.length * 15);
+                
+                const quant = sections.filter(s => s.type === 'quantitative');
+                const verbal = sections.filter(s => s.type === 'verbal');
+
+                const qAvg = quant.length > 0 ? (quant.reduce((a, b) => a + (b.correct || 0), 0) / quant.length).toFixed(1) : null;
+                const vAvg = verbal.length > 0 ? (verbal.reduce((a, b) => a + (b.correct || 0), 0) / verbal.length).toFixed(1) : null;
+
+                let totalQ = 0, totalCorrect = 0;
+                sections.forEach(s => {
+                    totalQ += (s.total || (s.type === 'quantitative' ? 20 : 23));
+                    totalCorrect += (s.correct || 0);
+                });
+                const accuracy = totalQ > 0 ? Math.round((totalCorrect / totalQ) * 100) : null;
+
+                const isEssaysDone = essays.length >= 2;
+                const isSectionsDone = sections.length >= 4;
+                const isMathDone = mathDays >= 5;
+                const isFullyCompleted = isEssaysDone && isSectionsDone && isMathDone;
+
+                weeks.push({
+                    weekIndex: i,
+                    start,
+                    end,
+                    label: `${start.toLocaleDateString('he-IL', {day:'2-digit', month:'2-digit'})} - ${end.toLocaleDateString('he-IL', {day:'2-digit', month:'2-digit'})}`,
+                    isCurrent: i === 0,
+                    essaysCount: essays.length,
+                    sectionsCount: sections.length,
+                    mathDaysCount: mathDays,
+                    totalMins,
+                    qAvg,
+                    vAvg,
+                    accuracy,
+                    isFullyCompleted
+                });
+            }
+
+            return weeks;
+        }
+
+        function renderAnalyticsSection() {
+            const now = new Date();
+            const { start: weekStart, end: weekEnd } = getWeekBounds(now);
+            const thirtyDaysAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
+
+            // Filter items according to currentAnalyticsFilter
+            const filterFn = (dateStr) => {
+                if (!dateStr) return true;
+                const d = new Date(dateStr);
+                if (isNaN(d.getTime())) return true;
+                if (currentAnalyticsFilter === 'week') return d >= weekStart && d <= weekEnd;
+                if (currentAnalyticsFilter === 'month') return d >= thirtyDaysAgo;
+                return true;
+            };
+
+            const filteredSections = (appData.sections || []).filter(s => filterFn(s.date || s.createdAt));
+            const filteredEssays = (appData.essays || []).filter(e => filterFn(e.date || e.createdAt));
+            const filteredMath = (appData.mentalMathLogs || []).filter(m => filterFn(m.date || m.timestamp));
+
+            // 1. KPI 1: Total Study Time
+            const totalMinutes = (filteredSections.length * 20) + (filteredEssays.length * 30) + (filteredMath.length * 15);
+            const hours = Math.floor(totalMinutes / 60);
+            const mins = totalMinutes % 60;
+            const timeStr = hours > 0 ? `${hours} שעות ${mins > 0 ? `ו-${mins} דק'` : ''}` : `${mins} דק'`;
+            const totalSessions = filteredSections.length + filteredEssays.length + filteredMath.length;
+
+            const elTotalTime = document.getElementById('stat-total-time');
+            const elTotalSessions = document.getElementById('stat-total-sessions');
+            if (elTotalTime) elTotalTime.innerText = totalSessions > 0 ? timeStr : '0 דק\'';
+            if (elTotalSessions) elTotalSessions.innerText = `${totalSessions} פעילויות מתועדות`;
+
+            // 2. KPI 2: Weighted Accuracy
+            let totalQuestions = 0;
+            let totalCorrect = 0;
+            filteredSections.forEach(s => {
+                const qMax = s.total || (s.type === 'quantitative' ? 20 : 23);
+                totalQuestions += qMax;
+                totalCorrect += (s.correct || 0);
+            });
+            const weightedPct = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : null;
+            
+            const elWeighted = document.getElementById('stat-weighted-accuracy');
+            const elAccStatus = document.getElementById('stat-accuracy-status');
+            if (elWeighted) elWeighted.innerText = weightedPct !== null ? `${weightedPct}%` : '- %';
+            if (elAccStatus) {
+                if (weightedPct === null) elAccStatus.innerText = 'מכלל שאלות הפרקים';
+                else if (weightedPct >= 85) elAccStatus.innerText = 'מצוין! רמת שליטה גבוהה 🚀';
+                else if (weightedPct >= 70) elAccStatus.innerText = 'קצב טוב, שומרת על יציבות 🎯';
+                else elAccStatus.innerText = 'למקד תחקורים בטעויות החוזרות 💪';
+            }
+
+            // 3. KPI 3: Weekly Goals Completion Rate (Essays 2, Sections 4, Math 5)
+            const { start: curWeekStart, end: curWeekEnd } = getWeekBounds(now);
+            const curWeekEssays = (appData.essays || []).filter(e => {
+                const d = new Date(e.date || e.createdAt);
+                return d >= curWeekStart && d <= curWeekEnd;
+            }).length;
+            const curWeekSections = (appData.sections || []).filter(s => {
+                const d = new Date(s.date || s.createdAt);
+                return d >= curWeekStart && d <= curWeekEnd;
+            }).length;
+            const curWeekMathDays = new Set((appData.mentalMathLogs || []).filter(m => {
+                const d = new Date(m.date || m.timestamp);
+                return d >= curWeekStart && d <= curWeekEnd;
+            }).map(m => m.date)).size;
+
+            const essayProgress = Math.min(1, curWeekEssays / 2);
+            const sectionProgress = Math.min(1, curWeekSections / 4);
+            const mathProgress = Math.min(1, curWeekMathDays / 5);
+            const goalsRate = Math.round(((essayProgress + sectionProgress + mathProgress) / 3) * 100);
+
+            const elGoalsRate = document.getElementById('stat-goals-rate');
+            const elGoalsSummary = document.getElementById('stat-goals-summary');
+            if (elGoalsRate) elGoalsRate.innerText = `${goalsRate}%`;
+            if (elGoalsSummary) elGoalsSummary.innerText = `פרקים ${curWeekSections}/4 | חיבורים ${curWeekEssays}/2`;
+
+            // 4. KPI 4 & Chart: Hourly Activity Distribution (0-23)
+            const hourlyCounts = Array(24).fill(0);
+            const allActivities = [
+                ...filteredSections.map(s => ({ timestamp: s.createdAt || (s.date ? new Date(s.date).getTime() : Date.now()) })),
+                ...filteredEssays.map(e => ({ timestamp: e.createdAt || (e.date ? new Date(e.date).getTime() : Date.now()) })),
+                ...filteredMath.map(m => ({ timestamp: m.timestamp || (m.date ? new Date(m.date).getTime() : Date.now()) }))
+            ];
+
+            allActivities.forEach(act => {
+                if (act.timestamp) {
+                    const h = new Date(act.timestamp).getHours();
+                    if (h >= 0 && h < 24) hourlyCounts[h]++;
+                }
+            });
+
+            let peakHour = null;
+            let maxHourCount = 0;
+            for (let h = 0; h < 24; h++) {
+                if (hourlyCounts[h] > maxHourCount) {
+                    maxHourCount = hourlyCounts[h];
+                    peakHour = h;
+                }
+            }
+
+            const elPeakHour = document.getElementById('stat-peak-hour');
+            const elPeakPeriod = document.getElementById('stat-peak-period');
+            const chipPeakHour = document.getElementById('peak-hour-chip');
+
+            if (peakHour !== null && maxHourCount > 0) {
+                const hourLabel = `${String(peakHour).padStart(2, '0')}:00`;
+                const periodText = peakHour < 12 ? 'שעות הבוקר 🌅' : peakHour < 17 ? 'שעות הצהריים ☀️' : peakHour < 21 ? 'שעות הערב 🌇' : 'שעות הלילה 🌙';
+                if (elPeakHour) elPeakHour.innerText = hourLabel;
+                if (elPeakPeriod) elPeakPeriod.innerText = periodText;
+                if (chipPeakHour) chipPeakHour.innerText = `⚡ שעת שיא: ${hourLabel} (${maxHourCount} משימות)`;
+            } else {
+                if (elPeakHour) elPeakHour.innerText = '--:--';
+                if (elPeakPeriod) elPeakPeriod.innerText = 'הזמן שבו את הכי מפוקסת';
+                if (chipPeakHour) chipPeakHour.innerText = '⚡ שעת שיא: טרם נרשמה';
+            }
+
+            // 4 Day-part Buckets
+            const hourBuckets = {
+                morning: { label: 'בוקר (06:00-12:00)', icon: '🌅', count: 0 },
+                afternoon: { label: 'צהריים (12:00-17:00)', icon: '☀️', count: 0 },
+                evening: { label: 'ערב (17:00-21:00)', icon: '🌇', count: 0 },
+                night: { label: 'לילה (21:00-06:00)', icon: '🌙', count: 0 }
+            };
+            for (let h = 0; h < 24; h++) {
+                const c = hourlyCounts[h];
+                if (h >= 6 && h < 12) hourBuckets.morning.count += c;
+                else if (h >= 12 && h < 17) hourBuckets.afternoon.count += c;
+                else if (h >= 17 && h < 21) hourBuckets.evening.count += c;
+                else hourBuckets.night.count += c;
+            }
+
+            const totalAct = allActivities.length || 1;
+            const bucketsEl = document.getElementById('hour-buckets-grid');
+            if (bucketsEl) {
+                bucketsEl.innerHTML = Object.entries(hourBuckets).map(([key, b]) => {
+                    const pct = Math.round((b.count / totalAct) * 100);
+                    return `
+                        <div class="bg-stone-50/80 p-3.5 rounded-2xl border border-stone-200/60">
+                            <div class="flex items-center justify-between text-xs font-bold text-stone-600 mb-1.5">
+                                <span class="flex items-center gap-1.5">${b.icon} ${b.label}</span>
+                                <span class="text-stone-800 font-black">${b.count}</span>
+                            </div>
+                            <div class="w-full bg-stone-200/80 rounded-full h-2 overflow-hidden">
+                                <div class="bg-pink-500 h-full rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                            </div>
+                            <div class="text-[10px] text-stone-400 font-semibold mt-1 text-left" dir="ltr">${pct}%</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Render 24 vertical bars
+            const chartEl = document.getElementById('hourly-bars-chart');
+            if (chartEl) {
+                chartEl.innerHTML = hourlyCounts.map((count, hour) => {
+                    const heightPct = maxHourCount > 0 ? Math.max(8, (count / maxHourCount) * 100) : 8;
+                    const isPeak = hour === peakHour && count > 0;
+                    return `
+                        <div class="flex-1 flex flex-col items-center justify-end h-full min-w-[20px] group relative">
+                            <div class="text-[9px] font-bold text-stone-500 mb-1 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">${count}</div>
+                            <div class="w-full rounded-t-md transition-all ${isPeak ? 'bg-gradient-to-t from-pink-600 to-rose-500 shadow-sm' : count > 0 ? 'bg-pink-400 hover:bg-pink-500' : 'bg-stone-200/60'}"
+                                 style="height: ${count > 0 ? heightPct : 6}%"
+                                 title="${hour}:00 - ${count} משימות"></div>
+                            <span class="text-[8px] text-stone-400 font-bold mt-1">${hour % 3 === 0 ? `${hour}` : ''}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // 5. Domain Breakdown (Quantitative & Verbal)
+            const quantSecs = filteredSections.filter(s => s.type === 'quantitative');
+            const verbalSecs = filteredSections.filter(s => s.type === 'verbal');
+
+            const quantCountEl = document.getElementById('stat-quant-count');
+            const quantAvgEl = document.getElementById('stat-quant-avg');
+            const quantPctEl = document.getElementById('stat-quant-pct');
+            const quantBarEl = document.getElementById('stat-quant-bar');
+            const quantRatioEl = document.getElementById('stat-quant-ratio-text');
+            const quantBestEl = document.getElementById('stat-quant-best');
+
+            if (quantCountEl) quantCountEl.innerText = `${quantSecs.length} פרקים`;
+            if (quantSecs.length > 0) {
+                const qSum = quantSecs.reduce((a, c) => a + (c.correct || 0), 0);
+                const qAvg = (qSum / quantSecs.length).toFixed(1);
+                const qPct = Math.round((qSum / (quantSecs.length * 20)) * 100);
+                const qBest = Math.max(...quantSecs.map(s => s.correct || 0));
+
+                if (quantAvgEl) quantAvgEl.innerText = `${qAvg} / 20`;
+                if (quantPctEl) quantPctEl.innerText = `${qPct}%`;
+                if (quantBarEl) quantBarEl.style.width = `${qPct}%`;
+                if (quantRatioEl) quantRatioEl.innerText = `${qAvg} מתוך 20 (${qPct}%)`;
+                if (quantBestEl) quantBestEl.innerText = `${qBest} / 20 ⭐`;
+            } else {
+                if (quantAvgEl) quantAvgEl.innerText = '- / 20';
+                if (quantPctEl) quantPctEl.innerText = '-%';
+                if (quantBarEl) quantBarEl.style.width = '0%';
+                if (quantRatioEl) quantRatioEl.innerText = '0 / 20';
+                if (quantBestEl) quantBestEl.innerText = '--';
+            }
+
+            const verbalCountEl = document.getElementById('stat-verbal-count');
+            const verbalAvgEl = document.getElementById('stat-verbal-avg');
+            const verbalPctEl = document.getElementById('stat-verbal-pct');
+            const verbalBarEl = document.getElementById('stat-verbal-bar');
+            const verbalRatioEl = document.getElementById('stat-verbal-ratio-text');
+            const verbalBestEl = document.getElementById('stat-verbal-best');
+
+            if (verbalCountEl) verbalCountEl.innerText = `${verbalSecs.length} פרקים`;
+            if (verbalSecs.length > 0) {
+                const vSum = verbalSecs.reduce((a, c) => a + (c.correct || 0), 0);
+                const vAvg = (vSum / verbalSecs.length).toFixed(1);
+                const vPct = Math.round((vSum / (verbalSecs.length * 23)) * 100);
+                const vBest = Math.max(...verbalSecs.map(s => s.correct || 0));
+
+                if (verbalAvgEl) verbalAvgEl.innerText = `${vAvg} / 23`;
+                if (verbalPctEl) verbalPctEl.innerText = `${vPct}%`;
+                if (verbalBarEl) verbalBarEl.style.width = `${vPct}%`;
+                if (verbalRatioEl) verbalRatioEl.innerText = `${vAvg} מתוך 23 (${vPct}%)`;
+                if (verbalBestEl) verbalBestEl.innerText = `${vBest} / 23 ⭐`;
+            } else {
+                if (verbalAvgEl) verbalAvgEl.innerText = '- / 23';
+                if (verbalPctEl) verbalPctEl.innerText = '-%';
+                if (verbalBarEl) verbalBarEl.style.width = '0%';
+                if (verbalRatioEl) verbalRatioEl.innerText = '0 / 23';
+                if (verbalBestEl) verbalBestEl.innerText = '--';
+            }
+
+            // 6. Mistake Analysis Breakdown
+            const reasonCounts = {
+                careless: 0,
+                time: 0,
+                gap: 0,
+                guess: 0
+            };
+            let totalMistakesRecorded = 0;
+
+            filteredSections.forEach(s => {
+                (s.mistakeReasons || []).forEach(r => {
+                    if (reasonCounts[r] !== undefined) {
+                        reasonCounts[r]++;
+                        totalMistakesRecorded++;
+                    }
+                });
+            });
+
+            const reasonMeta = {
+                careless: { label: '🤦‍♀️ חוסר תשומת לב / ריכוז', color: 'bg-rose-500' },
+                time: { label: '⏰ לחץ זמן / סיום מהיר', color: 'bg-amber-500' },
+                gap: { label: '❌ פער בחומר או בנוסחה', color: 'bg-purple-500' },
+                guess: { label: '🎲 ניחוש (חוסר ביטחון)', color: 'bg-blue-500' }
+            };
+
+            const containerMistakes = document.getElementById('mistake-bars-container');
+            const pillTopMistake = document.getElementById('top-mistake-pill');
+            const tipBox = document.getElementById('mistake-smart-tip');
+
+            if (totalMistakesRecorded > 0) {
+                let maxReason = 'careless';
+                let maxCount = 0;
+                Object.entries(reasonCounts).forEach(([r, count]) => {
+                    if (count > maxCount) {
+                        maxCount = count;
+                        maxReason = r;
+                    }
+                });
+
+                if (pillTopMistake) pillTopMistake.innerText = `גורם הטעויות המוביל: ${reasonMeta[maxReason].label.split(' ')[1]}`;
+                
+                if (containerMistakes) {
+                    containerMistakes.innerHTML = Object.entries(reasonCounts).map(([key, count]) => {
+                        const meta = reasonMeta[key];
+                        const pct = Math.round((count / totalMistakesRecorded) * 100);
+                        return `
+                            <div class="space-y-1">
+                                <div class="flex justify-between text-xs font-bold text-stone-700">
+                                    <span>${meta.label}</span>
+                                    <span>${count} פעמים (${pct}%)</span>
+                                </div>
+                                <div class="w-full bg-stone-100 rounded-full h-2.5 overflow-hidden">
+                                    <div class="${meta.color} h-full rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                if (tipBox) {
+                    if (maxReason === 'careless') {
+                        tipBox.innerHTML = `💡 <strong>טיפ פדגוגי ממוקד:</strong> רוב הטעויות שלך נובעות מחוסר תשומת לב. סמני במרקר כל מילת שלילה ("חוץ מ-", "לא נכון", "בהכרח") לפני קריאת התשובות!`;
+                    } else if (maxReason === 'time') {
+                        tipBox.innerHTML = `💡 <strong>טיפ פדגוגי ממוקד:</strong> לחץ הזמן פוגע בך בסוף הפרק. הפעילי את "כלל 45 השניות": אם אין כיוון ברור, סמני ניחוש ועברי מיד הלאה!`;
+                    } else if (maxReason === 'gap') {
+                        tipBox.innerHTML = `💡 <strong>טיפ פדגוגי ממוקד:</strong> זוהו פערי ידע. רשמי במחברת הטעויות את הנושאים הספציפיים וחזרי על הנוסחה/חוק לפני הפרק הבא.`;
+                    } else {
+                        tipBox.innerHTML = `💡 <strong>טיפ פדגוגי ממוקד:</strong> בעת ניחוש, תמיד פסלי לפחות 2 תשובות בלתי סבירות כדי להעלות את הסיכוי ל-50%.`;
+                    }
+                }
+            } else {
+                if (pillTopMistake) pillTopMistake.innerText = 'טרם תועדו טעויות';
+                if (containerMistakes) {
+                    containerMistakes.innerHTML = '<div class="p-4 bg-stone-50 rounded-2xl text-xs text-stone-400 text-center border border-dashed border-stone-200">ברגע שתסמני טעויות בתחקורי הפרקים, יופיע כאן פילוח מדויק של נקודות התורפה 🎯</div>';
+                }
+            }
+
+            // 7. Personal Records (שיאים אישיים)
+            const allQuant = (appData.sections || []).filter(s => s.type === 'quantitative');
+            const allVerbal = (appData.sections || []).filter(s => s.type === 'verbal');
+
+            const maxQuant = allQuant.length > 0 ? Math.max(...allQuant.map(s => s.correct || 0)) : null;
+            const maxVerbal = allVerbal.length > 0 ? Math.max(...allVerbal.map(s => s.correct || 0)) : null;
+            const masterStreak = calcMasterStreak();
+
+            // Find best day
+            const dayCounts = {};
+            [...(appData.sections || []), ...(appData.essays || []), ...(appData.mentalMathLogs || [])].forEach(it => {
+                const d = it.date || toIso(new Date(it.createdAt || it.timestamp));
+                dayCounts[d] = (dayCounts[d] || 0) + 1;
+            });
+            let bestDay = null;
+            let maxDayCount = 0;
+            Object.entries(dayCounts).forEach(([d, c]) => {
+                if (c > maxDayCount) {
+                    maxDayCount = c;
+                    bestDay = d;
+                }
+            });
+
+            const elRecQuant = document.getElementById('rec-quant-score');
+            const elRecVerbal = document.getElementById('rec-verbal-score');
+            const elRecStreak = document.getElementById('rec-streak-days');
+            const elRecBestDay = document.getElementById('rec-best-day');
+
+            if (elRecQuant) elRecQuant.innerText = maxQuant !== null ? `${maxQuant} / 20 ⭐` : '- / 20';
+            if (elRecVerbal) elRecVerbal.innerText = maxVerbal !== null ? `${maxVerbal} / 23 ⭐` : '- / 23';
+            if (elRecStreak) elRecStreak.innerText = `${masterStreak} ימים 🔥`;
+            if (elRecBestDay) {
+                if (bestDay && maxDayCount > 0) {
+                    elRecBestDay.innerText = `${new Date(bestDay).toLocaleDateString('he-IL', {day:'2-digit', month:'2-digit'})} (${maxDayCount} משימות)`;
+                } else {
+                    elRecBestDay.innerText = '--';
+                }
+            }
+
+            // 8. Week-over-Week Tracker & Comparison
+            const weekHistory = getWeekOverWeekHistory();
+            const curW = weekHistory[0]; // Current week
+            const prevW = weekHistory[1]; // Previous week
+
+            // Render comparison banner
+            const bannerEl = document.getElementById('week-comparison-banner');
+            if (bannerEl) {
+                const secDiff = curW.sectionsCount - prevW.sectionsCount;
+                const essayDiff = curW.essaysCount - prevW.essaysCount;
+                const minDiff = curW.totalMins - prevW.totalMins;
+
+                const secSign = secDiff > 0 ? `+${secDiff}` : `${secDiff}`;
+                const essaySign = essayDiff > 0 ? `+${essayDiff}` : `${essayDiff}`;
+                const minSign = minDiff > 0 ? `+${minDiff}` : `${minDiff}`;
+
+                bannerEl.innerHTML = `
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <div>
+                            <div class="text-xs font-bold text-rose-800 flex items-center gap-1.5">
+                                <span>📈</span> השוואה: השבוע (${curW.label}) מול שבוע קודם (${prevW.label})
+                            </div>
+                            <div class="text-[11px] text-stone-600 mt-0.5">
+                                ${secDiff > 0 || essayDiff > 0 || minDiff > 0 
+                                    ? 'מגמת עלייה מדהימה! את שומרת על קצב עבודה פסיכומטרי גבוה 🚀' 
+                                    : 'ממשיכים לצבור שעות לקראת המועד – כל פרק מקדם אותך! 🌟'}
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="px-2.5 py-1 rounded-xl text-xs font-bold ${secDiff >= 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-200 text-stone-700'}">
+                                ${secSign} פרקים
+                            </span>
+                            <span class="px-2.5 py-1 rounded-xl text-xs font-bold ${essayDiff >= 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-200 text-stone-700'}">
+                                ${essaySign} חיבורים
+                            </span>
+                            <span class="px-2.5 py-1 rounded-xl text-xs font-bold ${minDiff >= 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-200 text-stone-700'}">
+                                ${minSign} דקות תרגול
+                            </span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Render Weekly History List
+            const historyListEl = document.getElementById('weekly-history-list');
+            if (historyListEl) {
+                historyListEl.innerHTML = weekHistory.map(w => {
+                    const essayPct = Math.min(100, Math.round((w.essaysCount / 2) * 100));
+                    const secPct = Math.min(100, Math.round((w.sectionsCount / 4) * 100));
+                    const hoursW = Math.floor(w.totalMins / 60);
+                    const minsW = w.totalMins % 60;
+                    const timeWStr = hoursW > 0 ? `${hoursW}ש' ${minsW}ד'` : `${minsW} דק'`;
+
+                    return `
+                        <div class="p-4 rounded-2xl border transition-all ${w.isCurrent ? 'bg-pink-50/40 border-pink-200 shadow-xs' : 'bg-white border-stone-200/80'}">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm font-black text-stone-800">${w.label}</span>
+                                    ${w.isCurrent ? '<span class="px-2 py-0.5 rounded-md bg-pink-100 text-pink-700 text-[10px] font-bold">השבוע הנוכחי</span>' : ''}
+                                    ${w.isFullyCompleted ? '<span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-bold">יעדים הושלמו ✅</span>' : ''}
+                                </div>
+                                <div class="text-xs font-bold text-stone-500">
+                                    סה"כ זמן תרגול שבועי: <span class="text-pink-600 font-black">${timeWStr}</span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                                <!-- Essays -->
+                                <div class="p-2.5 rounded-xl bg-amber-50/60 border border-amber-100 space-y-1">
+                                    <div class="flex justify-between font-bold text-amber-900">
+                                        <span>✍️ חיבורים (יעד: 2)</span>
+                                        <span>${w.essaysCount}/2 ${w.essaysCount >= 2 ? '✅' : ''}</span>
+                                    </div>
+                                    <div class="w-full bg-amber-100 rounded-full h-1.5 overflow-hidden">
+                                        <div class="bg-amber-500 h-full rounded-full transition-all" style="width: ${essayPct}%"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Sections -->
+                                <div class="p-2.5 rounded-xl bg-pink-50/60 border border-pink-100 space-y-1">
+                                    <div class="flex justify-between font-bold text-pink-900">
+                                        <span>⏱️ פרקים בזמן (יעד: 4)</span>
+                                        <span>${w.sectionsCount}/4 ${w.sectionsCount >= 4 ? '✅' : ''}</span>
+                                    </div>
+                                    <div class="w-full bg-pink-100 rounded-full h-1.5 overflow-hidden">
+                                        <div class="bg-pink-500 h-full rounded-full transition-all" style="width: ${secPct}%"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Mental Math -->
+                                <div class="p-2.5 rounded-xl bg-rose-50/60 border border-rose-100 space-y-1">
+                                    <div class="flex justify-between font-bold text-rose-900">
+                                        <span>🧮 חישוב כמותי יומי</span>
+                                        <span>${w.mathDaysCount}/7 ימים ${w.mathDaysCount >= 5 ? '✅' : ''}</span>
+                                    </div>
+                                    <div class="w-full bg-rose-100 rounded-full h-1.5 overflow-hidden">
+                                        <div class="bg-rose-500 h-full rounded-full transition-all" style="width: ${Math.min(100, Math.round((w.mathDaysCount / 7) * 100))}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+
         window.addEventListener('DOMContentLoaded', () => {
             renderApp();
             setupLiveCloudListener();
