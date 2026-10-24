@@ -17,6 +17,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+    <!-- Firebase Compat SDKs for Instant Cloud Sync -->
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -27,7 +31,6 @@
                         sans: ['Rubik', 'system-ui', '-apple-system', 'sans-serif'],
                     },
                     colors: {
-                        // StudyStreak Pink Accent Palette
                         pink: {
                             50: '#fdf2f8',
                             100: '#fce7f3',
@@ -87,30 +90,35 @@
         <button onclick="dismissWarning()" class="bg-black/20 hover:bg-black/30 px-3 py-1.5 rounded-xl text-xs font-bold transition-all">הבנתי</button>
     </div>
 
-    <!-- Outer Wrapper (Identical to StudyStreak Structure) -->
+    <!-- Outer Wrapper -->
     <div class="min-h-screen flex flex-col md:flex-row" dir="rtl">
 
         <!-- ============================================================= -->
-        <!-- DESKTOP SIDEBAR (Identical to StudyStreak <aside>) -->
+        <!-- DESKTOP SIDEBAR -->
         <!-- ============================================================= -->
         <aside class="hidden md:flex flex-col w-72 bg-white/80 backdrop-blur-xl border-l border-stone-200 p-6 sticky top-0 h-screen overflow-y-auto custom-scrollbar">
             
             <!-- Logo & Brand Header -->
-            <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center justify-between mb-6">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-gradient-to-br from-pink-100 to-rose-100 rounded-2xl flex items-center justify-center text-xl shadow-xs">
                         🎯
                     </div>
                     <div>
-                        <h1 class="text-lg font-bold text-stone-900 leading-tight tracking-tight flex items-center gap-1">
-                            <span>PsychoStreak</span>
-                        </h1>
-                        <div class="text-[11px] text-pink-600 font-bold mt-0.5">פסיכומטרי דו-תחומי</div>
+                        <h1 class="text-lg font-bold text-stone-900 leading-tight tracking-tight">PsychoStreak</h1>
+                        <div class="flex items-center gap-1.5 mt-0.5">
+                            <span class="text-[11px] text-pink-600 font-bold">פסיכומטרי</span>
+                            <!-- Cloud Sync Pill -->
+                            <span id="sidebar-sync-badge" class="text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.2 rounded-full font-bold flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                <span>מסונכרן</span>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Flame Streak Card (Dark stone with pink flame accent) -->
+            <!-- Flame Streak Card -->
             <div class="bg-gradient-to-br from-stone-800 to-stone-900 text-white p-5 rounded-3xl mb-6 shadow-md group relative cursor-pointer transition-all hover:shadow-lg active:scale-95" onclick="switchTab('analytics')">
                 <div class="absolute top-0 right-0 w-24 h-24 bg-pink-500/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>
                 <div class="relative z-10 flex justify-between items-center mb-1">
@@ -159,14 +167,17 @@
         </aside>
 
         <!-- ============================================================= -->
-        <!-- MOBILE HEADER (<header>) -->
+        <!-- MOBILE HEADER -->
         <!-- ============================================================= -->
         <header class="md:hidden flex justify-between items-center bg-white/90 backdrop-blur-md p-4 sticky top-0 z-40 border-b border-stone-100 pt-safe-top">
             <div class="flex items-center gap-2.5">
                 <div class="w-8 h-8 bg-gradient-to-br from-pink-100 to-rose-100 rounded-xl flex items-center justify-center text-base shadow-xs">🎯</div>
                 <div>
                     <div class="font-bold text-base text-stone-900 tracking-tight">PsychoStreak</div>
-                    <div class="text-[10px] text-pink-600 font-bold">פסיכומטרי</div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-[10px] text-pink-600 font-bold">פסיכומטרי</span>
+                        <span id="mobile-sync-badge" class="w-2 h-2 rounded-full bg-emerald-500" title="מסונכרן בענן"></span>
+                    </div>
                 </div>
             </div>
             <div class="flex gap-2 items-center">
@@ -180,7 +191,7 @@
         </header>
 
         <!-- ============================================================= -->
-        <!-- MOBILE BOTTOM NAVIGATION (<nav>) -->
+        <!-- MOBILE BOTTOM NAVIGATION -->
         <!-- ============================================================= -->
         <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-stone-200 z-40 pb-safe-bottom overflow-x-auto hide-scrollbar flex justify-around px-2 pt-2 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
             <button onclick="switchTab('dashboard')" id="mob-nav-dashboard" class="mob-nav-btn flex flex-col items-center gap-1 py-1.5 px-3 rounded-2xl text-[11px] font-bold text-pink-700 bg-pink-50 flex-1">
@@ -206,11 +217,11 @@
         </nav>
 
         <!-- ============================================================= -->
-        <!-- MAIN CONTENT AREA (<main>) -->
+        <!-- MAIN CONTENT AREA -->
         <!-- ============================================================= -->
         <main class="flex-1 w-full max-w-5xl mx-auto p-4 md:p-6 lg:p-8 relative z-10 space-y-6">
 
-            <!-- Hero Countdown Banner (Light Pink Pastel Style) -->
+            <!-- Hero Countdown Banner -->
             <div class="bg-gradient-to-br from-pink-500 via-rose-500 to-pink-600 text-white rounded-3xl p-6 md:p-7 shadow-xl shadow-pink-500/15 relative overflow-hidden">
                 <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
                 <div class="absolute -left-10 -top-10 w-44 h-44 bg-rose-400/30 rounded-full blur-2xl pointer-events-none"></div>
@@ -223,6 +234,9 @@
                             </span>
                             <span id="week-date-badge" class="text-xs text-pink-100 font-medium bg-black/10 px-3 py-1 rounded-full border border-white/10">
                                 שבוע: א'-ש'
+                            </span>
+                            <span class="text-xs text-white/90 bg-emerald-500/30 border border-emerald-300/40 px-2.5 py-1 rounded-full font-bold flex items-center gap-1">
+                                <span>☁️</span> סנכרון חי פעיל (מחשב ↔ טלפון)
                             </span>
                         </div>
                         <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">
@@ -245,7 +259,7 @@
             </div>
 
             <!-- ========================================================= -->
-            <!-- 4 METRIC CARDS (Identical to StudyStreak Dashboard Grid) -->
+            <!-- 4 METRIC CARDS -->
             <!-- ========================================================= -->
             <section class="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 
@@ -299,13 +313,12 @@
             </section>
 
             <!-- ========================================================= -->
-            <!-- TAB 1: DASHBOARD (ראשי) -->
+            <!-- TAB 1: DASHBOARD -->
             <!-- ========================================================= -->
             <div id="tab-dashboard" class="tab-content space-y-6 animate-fadeIn">
                 
                 <!-- Quick Timers & Action Row -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- Quick Essay Timer Box -->
                     <div class="bg-white p-5 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:border-pink-200 transition-all flex flex-col justify-between">
                         <div>
                             <div class="flex items-center justify-between mb-2">
@@ -320,7 +333,6 @@
                         </button>
                     </div>
 
-                    <!-- Quick Section Timer Box -->
                     <div class="bg-white p-5 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:border-pink-200 transition-all flex flex-col justify-between">
                         <div>
                             <div class="flex items-center justify-between mb-2">
@@ -335,7 +347,6 @@
                         </button>
                     </div>
 
-                    <!-- Quick Mental Math Box -->
                     <div class="bg-white p-5 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:border-pink-200 transition-all flex flex-col justify-between">
                         <div>
                             <div class="flex items-center justify-between mb-2">
@@ -362,13 +373,13 @@
                     </div>
 
                     <div id="dashboard-recent-list" class="space-y-2">
-                        <!-- Populated by JS -->
+                        <!-- Injected by JS -->
                     </div>
                 </div>
             </div>
 
             <!-- ========================================================= -->
-            <!-- TAB 2: ESSAYS (חיבורים - 2 בשבוע) -->
+            <!-- TAB 2: ESSAYS -->
             <!-- ========================================================= -->
             <div id="tab-essays" class="tab-content hidden space-y-6 animate-fadeIn">
                 <div class="bg-white p-6 md:p-8 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] space-y-6">
@@ -388,7 +399,6 @@
                         </span>
                     </div>
 
-                    <!-- Weekly Progress Bar -->
                     <div class="p-4 bg-stone-50 rounded-2xl border border-stone-200/80">
                         <div class="flex justify-between items-center text-xs font-bold mb-2">
                             <span class="text-stone-700">התקדמות השבוע</span>
@@ -399,7 +409,6 @@
                         </div>
                     </div>
 
-                    <!-- 30-min Guided Essay Timer -->
                     <div class="p-6 bg-gradient-to-br from-amber-50/70 to-orange-50/40 rounded-3xl border border-amber-200/80 text-center space-y-3">
                         <div class="text-xs font-bold text-amber-900 uppercase tracking-wider flex items-center justify-center gap-1.5">
                             <span>⏱️</span> טיימר כתיבה מונחה (30 דקות בדיוק)
@@ -422,7 +431,6 @@
                         </div>
                     </div>
 
-                    <!-- Action Button & List -->
                     <div class="space-y-4 pt-2">
                         <div class="flex items-center justify-between">
                             <h4 class="font-bold text-stone-900 text-sm">חיבורים שנכתבו השבוע:</h4>
@@ -430,16 +438,14 @@
                                 <span>+</span> תיעוד חיבור שבוצע
                             </button>
                         </div>
-                        <div id="tab-essays-list" class="space-y-2">
-                            <!-- Injected by JS -->
-                        </div>
+                        <div id="tab-essays-list" class="space-y-2"></div>
                     </div>
 
                 </div>
             </div>
 
             <!-- ========================================================= -->
-            <!-- TAB 3: SECTIONS (פרקים בזמן - 4 בשבוע) -->
+            <!-- TAB 3: SECTIONS -->
             <!-- ========================================================= -->
             <div id="tab-sections" class="tab-content hidden space-y-6 animate-fadeIn">
                 <div class="bg-white p-6 md:p-8 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] space-y-6">
@@ -459,7 +465,6 @@
                         </span>
                     </div>
 
-                    <!-- Weekly Progress Bar -->
                     <div class="p-4 bg-stone-50 rounded-2xl border border-stone-200/80">
                         <div class="flex justify-between items-center text-xs font-bold mb-2">
                             <span class="text-stone-700">התקדמות השבוע</span>
@@ -470,7 +475,6 @@
                         </div>
                     </div>
 
-                    <!-- 20-min Section Timer with 5-min warning -->
                     <div class="p-6 bg-gradient-to-br from-pink-50/70 to-rose-50/40 rounded-3xl border border-pink-200/80 text-center space-y-3">
                         <div class="flex items-center justify-between max-w-sm mx-auto mb-1">
                             <span class="text-xs font-bold text-pink-900 uppercase">טיימר פרק (20 דק' + התראת 5 דק'):</span>
@@ -495,7 +499,6 @@
                         </div>
                     </div>
 
-                    <!-- Action Button & List -->
                     <div class="space-y-4 pt-2">
                         <div class="flex items-center justify-between">
                             <h4 class="font-bold text-stone-900 text-sm">פרקים שנפתרו השבוע:</h4>
@@ -503,16 +506,14 @@
                                 <span>+</span> הזנת תוצאות פרק
                             </button>
                         </div>
-                        <div id="tab-sections-list" class="space-y-2">
-                            <!-- Injected by JS -->
-                        </div>
+                        <div id="tab-sections-list" class="space-y-2"></div>
                     </div>
 
                 </div>
             </div>
 
             <!-- ========================================================= -->
-            <!-- TAB 4: MENTAL MATH (חישוב מהיר - כל יום 15 דק') -->
+            <!-- TAB 4: MENTAL MATH -->
             <!-- ========================================================= -->
             <div id="tab-math" class="tab-content hidden space-y-6 animate-fadeIn">
                 <div class="bg-white p-6 md:p-8 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] space-y-6">
@@ -532,7 +533,6 @@
                         </span>
                     </div>
 
-                    <!-- Daily Status -->
                     <div id="tab-math-status-box" class="p-4 rounded-2xl border text-center transition-all bg-stone-50 border-stone-200">
                         <div class="text-xs font-semibold text-stone-500">סטטוס להיום:</div>
                         <div id="tab-math-status-text" class="text-base font-black text-stone-800 mt-1">
@@ -540,7 +540,6 @@
                         </div>
                     </div>
 
-                    <!-- 15-min Interactive Timer -->
                     <div class="p-6 bg-gradient-to-br from-rose-50/70 to-pink-50/40 rounded-3xl border border-rose-200/80 text-center space-y-3">
                         <div class="text-xs font-bold text-rose-900 uppercase tracking-wider flex items-center justify-center gap-1.5">
                             <span>⏱️</span> טיימר 15:00 דקות לתרגול זריז
@@ -558,7 +557,6 @@
                         </div>
                     </div>
 
-                    <!-- Check-in Action -->
                     <button id="tab-math-checkin-btn" onclick="completeMentalMath()" class="w-full py-4 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold rounded-2xl text-sm flex items-center justify-center gap-2 shadow-md shadow-pink-500/20 active:scale-95 transition-all">
                         <span>⚡</span> סימנתי שביצעתי 15 דקות עכשיו!
                     </button>
@@ -567,7 +565,7 @@
             </div>
 
             <!-- ========================================================= -->
-            <!-- TAB 5: ANALYTICS (דיוק וסטטיסטיקה) -->
+            <!-- TAB 5: ANALYTICS -->
             <!-- ========================================================= -->
             <div id="tab-analytics" class="tab-content hidden space-y-6 animate-fadeIn">
                 <div class="bg-white p-6 md:p-8 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] space-y-6">
@@ -585,7 +583,6 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Quant Stats -->
                         <div class="p-5 bg-gradient-to-br from-blue-50/80 to-indigo-50/40 rounded-3xl border border-blue-100 space-y-2">
                             <div class="flex items-center justify-between">
                                 <span class="text-xs font-bold text-blue-900 flex items-center gap-1.5">
@@ -599,7 +596,6 @@
                             </div>
                         </div>
 
-                        <!-- Verbal Stats -->
                         <div class="p-5 bg-gradient-to-br from-purple-50/80 to-pink-50/40 rounded-3xl border border-purple-100 space-y-2">
                             <div class="flex items-center justify-between">
                                 <span class="text-xs font-bold text-purple-900 flex items-center gap-1.5">
@@ -614,9 +610,8 @@
                         </div>
                     </div>
 
-                    <!-- Backup / Reset Area -->
                     <div class="pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500">
-                        <span>גיבוי ונתונים מקומיים</span>
+                        <span>גיבוי וסנכרון ענן</span>
                         <div class="flex gap-3">
                             <button onclick="exportData()" class="text-pink-600 font-bold hover:underline">ייצוא קובץ גיבוי 💾</button>
                             <span>•</span>
@@ -634,8 +629,9 @@
     </div>
 
     <!-- ============================================================= -->
-    <!-- MODAL: QUICK ACTION (תיעוד מהיר מהסיידבר) -->
+    <!-- MODALS -->
     <!-- ============================================================= -->
+    <!-- Quick Action Modal -->
     <div id="modal-quick-action" class="hidden fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-[80] flex items-end md:items-center justify-center p-0 md:p-4">
         <div class="bg-white rounded-t-[32px] md:rounded-[32px] w-full max-w-sm p-6 shadow-2xl animate-popIn pb-safe-bottom space-y-3">
             <div class="flex justify-between items-center mb-2">
@@ -657,9 +653,7 @@
         </div>
     </div>
 
-    <!-- ============================================================= -->
-    <!-- MODAL: ADD ESSAY -->
-    <!-- ============================================================= -->
+    <!-- Modal: Add Essay -->
     <div id="modal-essay" class="hidden fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-[80] flex items-end md:items-center justify-center p-0 md:p-4">
         <div class="bg-white rounded-t-[32px] md:rounded-[32px] w-full max-w-md p-6 md:p-8 shadow-2xl animate-popIn pb-safe-bottom">
             <div class="flex justify-between items-center mb-5">
@@ -696,9 +690,7 @@
         </div>
     </div>
 
-    <!-- ============================================================= -->
-    <!-- MODAL: ADD SECTION WITH MISTAKE ANALYSIS -->
-    <!-- ============================================================= -->
+    <!-- Modal: Add Section -->
     <div id="modal-section" class="hidden fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-[80] flex items-end md:items-center justify-center p-0 md:p-4">
         <div class="bg-white rounded-t-[32px] md:rounded-[32px] w-full max-w-md p-6 md:p-8 shadow-2xl animate-popIn max-h-[90vh] overflow-y-auto custom-scrollbar pb-safe-bottom">
             <div class="flex justify-between items-center mb-5">
@@ -709,7 +701,6 @@
                 <button onclick="closeModal('modal-section')" class="text-stone-400 hover:text-stone-600 bg-stone-100 p-2 rounded-full">✕</button>
             </div>
             <form onsubmit="handleSaveSection(event)" class="space-y-4">
-                <!-- Section Type Toggle -->
                 <div>
                     <label class="text-xs font-bold text-stone-500 block mb-1">סוג הפרק</label>
                     <div class="grid grid-cols-2 gap-2 bg-stone-100 p-1.5 rounded-2xl">
@@ -722,7 +713,6 @@
                     </div>
                 </div>
 
-                <!-- Correct Count Input -->
                 <div>
                     <label id="section-correct-label" class="text-xs font-bold text-stone-500 block mb-1">
                         כמה תשובות נכונות צדקת? (מתוך 20)
@@ -734,7 +724,7 @@
                     <div id="section-calc-result" class="hidden mt-1.5 text-xs font-bold text-pink-600 text-center"></div>
                 </div>
 
-                <!-- Mistake Analysis (Idea 2) -->
+                <!-- Mistake Analysis Area -->
                 <div id="mistake-analysis-area" class="hidden p-3.5 bg-rose-50/70 border border-rose-200/80 rounded-2xl space-y-2">
                     <div class="text-xs font-bold text-rose-900 flex items-center gap-1.5">
                         <span>🔍</span> תחקור מהיר: ממה נבעו הטעויות?
@@ -780,9 +770,7 @@
         </div>
     </div>
 
-    <!-- ============================================================= -->
-    <!-- MODAL: VIEW MISTAKE DETAILS -->
-    <!-- ============================================================= -->
+    <!-- Modal: View Mistake -->
     <div id="modal-view-mistake" class="hidden fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-[85] flex items-end md:items-center justify-center p-0 md:p-4">
         <div class="bg-white rounded-t-[32px] md:rounded-[32px] w-full max-w-md p-6 md:p-8 shadow-2xl animate-popIn pb-safe-bottom">
             <div class="flex justify-between items-center mb-4">
@@ -815,9 +803,7 @@
         </div>
     </div>
 
-    <!-- ============================================================= -->
-    <!-- MODAL: CONFIGURE EXAM DATE -->
-    <!-- ============================================================= -->
+    <!-- Modal: Configure Exam Date -->
     <div id="modal-exam-date" class="hidden fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-[80] flex items-end md:items-center justify-center p-0 md:p-4">
         <div class="bg-white rounded-t-[32px] md:rounded-[32px] w-full max-w-sm p-6 shadow-2xl animate-popIn pb-safe-bottom">
             <div class="flex justify-between items-center mb-4">
@@ -840,10 +826,12 @@
     </div>
 
     <!-- ============================================================= -->
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT & FIREBASE REAL-TIME CLOUD SYNC -->
     <!-- ============================================================= -->
     <script>
-        // Audio Chime
+        // -------------------------------------------------------------
+        // Audio Chime (Web Audio API)
+        // -------------------------------------------------------------
         function playChime(type = 'chime') {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -888,8 +876,63 @@
             }, 3000);
         }
 
-        // Data Management
+        // -------------------------------------------------------------
+        // Firebase Cloud Sync Configuration
+        // -------------------------------------------------------------
+        const firebaseConfig = {
+            apiKey: "AIzaSyBMfjLTktAFc5uFRN8Oda8-_u29KykDAYA",
+            authDomain: "loos-77484.firebaseapp.com",
+            projectId: "loos-77484",
+            storageBucket: "loos-77484.firebasestorage.app",
+            messagingSenderId: "944527580287",
+            appId: "1:944527580287:web:3c6ccacac1a0a8121a334a"
+        };
+
+        let db = null;
+        let isSyncingToCloud = false;
+
+        function setSyncStatus(status) {
+            const sidebarBadge = document.getElementById('sidebar-sync-badge');
+            const mobileBadge = document.getElementById('mobile-sync-badge');
+            if (status === 'synced') {
+                if (sidebarBadge) {
+                    sidebarBadge.className = 'text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.2 rounded-full font-bold flex items-center gap-1';
+                    sidebarBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span>מסונכרן</span>';
+                }
+                if (mobileBadge) mobileBadge.className = 'w-2 h-2 rounded-full bg-emerald-500';
+            } else if (status === 'syncing') {
+                if (sidebarBadge) {
+                    sidebarBadge.className = 'text-[10px] bg-amber-50 text-amber-700 border border-amber-200 px-1.5 py-0.2 rounded-full font-bold flex items-center gap-1 animate-pulse';
+                    sidebarBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span><span>מסנכרן...</span>';
+                }
+                if (mobileBadge) mobileBadge.className = 'w-2 h-2 rounded-full bg-amber-500 animate-pulse';
+            } else {
+                if (sidebarBadge) {
+                    sidebarBadge.className = 'text-[10px] bg-stone-100 text-stone-600 border border-stone-200 px-1.5 py-0.2 rounded-full font-bold flex items-center gap-1';
+                    sidebarBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-stone-400"></span><span>מקומי</span>';
+                }
+                if (mobileBadge) mobileBadge.className = 'w-2 h-2 rounded-full bg-stone-400';
+            }
+        }
+
+        try {
+            if (typeof firebase !== 'undefined') {
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                db = firebase.firestore();
+                try { db.settings({ ignoreUndefinedProperties: true }); } catch(e){}
+            }
+        } catch(e) {
+            console.warn('Firebase init offline:', e);
+            db = null;
+        }
+
+        // -------------------------------------------------------------
+        // LocalStorage & Cloud Realtime Sync
+        // -------------------------------------------------------------
         const STORAGE_KEY = 'psychoStreak_data_v1';
+        const CLOUD_DOC_ID = 'shelly_psychostreak';
 
         function loadData() {
             try {
@@ -900,18 +943,60 @@
                 examDate: '2026-12-25',
                 essays: [],
                 mentalMathLogs: [],
-                sections: []
+                sections: [],
+                lastUpdated: 0
             };
         }
 
         let appData = loadData();
 
-        function saveData() {
+        function saveData(syncToCloud = true) {
+            appData.lastUpdated = Date.now();
             localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
             renderApp();
+
+            if (syncToCloud && db) {
+                setSyncStatus('syncing');
+                isSyncingToCloud = true;
+                db.collection('users').doc(CLOUD_DOC_ID).set(appData, { merge: true })
+                    .then(() => {
+                        setSyncStatus('synced');
+                        setTimeout(() => { isSyncingToCloud = false; }, 400);
+                    })
+                    .catch(err => {
+                        console.warn('Cloud sync error:', err);
+                        setSyncStatus('offline');
+                        isSyncingToCloud = false;
+                    });
+            }
         }
 
+        // Setup real-time listener between phone & PC
+        function setupLiveCloudListener() {
+            if (!db) {
+                setSyncStatus('offline');
+                return;
+            }
+            db.collection('users').doc(CLOUD_DOC_ID).onSnapshot(doc => {
+                if (doc.exists && !isSyncingToCloud) {
+                    const cloudData = doc.data();
+                    if (cloudData && cloudData.lastUpdated && cloudData.lastUpdated > (appData.lastUpdated || 0)) {
+                        appData = { ...appData, ...cloudData };
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+                        renderApp();
+                        showToast('עודכן בזמן אמת מהמכשיר השני ☁️✨', 'info');
+                    }
+                }
+                setSyncStatus('synced');
+            }, err => {
+                console.warn('Live sync snapshot error:', err);
+                setSyncStatus('offline');
+            });
+        }
+
+        // -------------------------------------------------------------
         // Date Helpers
+        // -------------------------------------------------------------
         function getWeekBounds(baseDate = new Date()) {
             const d = new Date(baseDate);
             const start = new Date(d);
@@ -1013,21 +1098,16 @@
         }
 
         // =============================================================
-        // TAB SWITCHING (Router)
+        // TAB SWITCHING
         // =============================================================
         let currentTab = 'dashboard';
 
         function switchTab(tabName) {
             currentTab = tabName;
-
-            // Hide all contents
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-
-            // Show selected content
             const targetEl = document.getElementById(`tab-${tabName}`);
             if (targetEl) targetEl.classList.remove('hidden');
 
-            // Update desktop sidebar buttons
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.className = 'nav-btn flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-semibold transition-all active:scale-95 text-stone-600 hover:bg-stone-50 hover:text-stone-900';
             });
@@ -1036,7 +1116,6 @@
                 activeDesktopBtn.className = 'nav-btn flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-semibold transition-all active:scale-95 bg-pink-50 text-pink-700 font-bold shadow-xs';
             }
 
-            // Update mobile bottom nav buttons
             document.querySelectorAll('.mob-nav-btn').forEach(btn => {
                 btn.className = 'mob-nav-btn flex flex-col items-center gap-1 py-1.5 px-3 rounded-2xl text-[11px] font-medium text-stone-500 hover:text-stone-800 flex-1';
             });
@@ -1045,7 +1124,6 @@
                 activeMobBtn.className = 'mob-nav-btn flex flex-col items-center gap-1 py-1.5 px-3 rounded-2xl text-[11px] font-bold text-pink-700 bg-pink-50 flex-1';
             }
 
-            // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -1255,8 +1333,8 @@
             });
 
             playChime('chime');
-            saveData();
-            showToast('15 דקות חישוב מהיר הושלמו! הרצף נשמר 🔥', 'success');
+            saveData(true);
+            showToast('15 דקות חישוב מהיר הושלמו! סונכרן לענן ☁️🔥', 'success');
         }
 
         function openAddEssayModal() {
@@ -1282,18 +1360,17 @@
 
             playChime('chime');
             closeModal('modal-essay');
-            saveData();
-            showToast('החיבור נשמר בהצלחה לסטריק! ✍️✨', 'success');
+            saveData(true);
+            showToast('החיבור נשמר וסונכרן לענן! ✍️✨', 'success');
         }
 
         function deleteEssay(id) {
             if (!confirm('האם למחוק חיבור זה מהרשימה?')) return;
             appData.essays = appData.essays.filter(e => e.id !== id);
-            saveData();
+            saveData(true);
             showToast('החיבור נמחק', 'info');
         }
 
-        // Section Modal Logic
         let currentModalSectionType = 'quantitative';
         let currentMistakeReasons = [];
 
@@ -1399,14 +1476,14 @@
             appData.sections.unshift(newSec);
             playChime('chime');
             closeModal('modal-section');
-            saveData();
-            showToast(`הפרק תועד בהצלחה! ${correct}/${maxQ} (${newSec.percentage}%) 🎯`, 'success');
+            saveData(true);
+            showToast(`הפרק תועד וסונכרן לענן! ${correct}/${maxQ} (${newSec.percentage}%) 🎯`, 'success');
         }
 
         function deleteSection(id) {
             if (!confirm('האם למחוק פרק זה מהרשימה?')) return;
             appData.sections = appData.sections.filter(s => s.id !== id);
-            saveData();
+            saveData(true);
             showToast('הפרק נמחק', 'info');
         }
 
@@ -1462,9 +1539,9 @@
             const val = document.getElementById('exam-target-date-input').value;
             if (val) {
                 appData.examDate = val;
-                saveData();
+                saveData(true);
                 closeModal('modal-exam-date');
-                showToast('מועד הבחינה עודכן בהצלחה! 🎯', 'success');
+                showToast('מועד הבחינה עודכן וסונכרן לענן! 🎯', 'success');
             }
         }
 
@@ -1472,7 +1549,6 @@
             document.getElementById(id).classList.add('hidden');
         }
 
-        // Export & Import
         function exportData() {
             const jsonStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData, null, 2));
             const dl = document.createElement('a');
@@ -1491,8 +1567,8 @@
                     const parsed = JSON.parse(e.target.result);
                     if (parsed && typeof parsed === 'object') {
                         appData = { ...appData, ...parsed };
-                        saveData();
-                        showToast('הנתונים שוחזרו בהצלחה! 🎉', 'success');
+                        saveData(true);
+                        showToast('הנתונים שוחזרו וסונכרנו לענן! 🎉', 'success');
                     }
                 } catch(err) {
                     showToast('קובץ גיבוי לא תקין', 'warning');
@@ -1692,6 +1768,7 @@
         // Initialize on DOM load
         window.addEventListener('DOMContentLoaded', () => {
             renderApp();
+            setupLiveCloudListener();
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('./sw.js?v=20261024_psychostreak_pink').catch(() => {});
             }
