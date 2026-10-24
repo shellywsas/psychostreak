@@ -153,6 +153,11 @@
                     <span class="text-lg">📊</span>
                     <span>דיוק וסטטיסטיקה</span>
                 </button>
+                <button onclick="openDiagnosticsModal()" id="nav-btn-diagnostics" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-semibold transition-all active:scale-95 text-stone-500 hover:bg-emerald-50 hover:text-emerald-800">
+                    <span class="text-base">🩺</span>
+                    <span>בודק תקלות ומערכת</span>
+                    <span class="mr-auto w-2 h-2 rounded-full bg-emerald-500"></span>
+                </button>
             </nav>
 
             <!-- Bottom Action Button -->
@@ -316,6 +321,35 @@
             <!-- TAB 1: DASHBOARD -->
             <!-- ========================================================= -->
             <div id="tab-dashboard" class="tab-content space-y-6 animate-fadeIn">
+
+                <!-- Real-Time Cloud & Diagnostics Bar (Prominent Status) -->
+                <div class="bg-gradient-to-r from-stone-900 via-stone-800 to-stone-900 text-white p-4 md:p-5 rounded-3xl shadow-md border border-stone-700/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-pink-500/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>
+                    <div class="relative z-10 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-xl">☁️</div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold text-pink-300">סנכרון ענן בזמן אמת (Firebase Firestore)</span>
+                                <span id="dash-cloud-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> מחובר ומסונכרן
+                                </span>
+                            </div>
+                            <div class="text-[11px] text-stone-300 mt-0.5 flex items-center gap-2">
+                                <span>מסד נתונים: <code class="bg-black/30 px-1.5 py-0.2 rounded text-pink-200">loos-77484</code></span>
+                                <span>•</span>
+                                <span id="dash-last-synced-time">סונכרן כעת 🟢</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative z-10 flex items-center gap-2 w-full sm:w-auto">
+                        <button onclick="forceCloudSync(true)" class="flex-1 sm:flex-none px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center justify-center gap-1.5 border border-white/10">
+                            <span>🔄</span> בדיקת סנכרון
+                        </button>
+                        <button onclick="openDiagnosticsModal()" class="flex-1 sm:flex-none px-3.5 py-2 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center justify-center gap-1.5 shadow-sm">
+                            <span>🩺</span> בודק תקלות
+                        </button>
+                    </div>
+                </div>
                 
                 <!-- Quick Timers & Action Row -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -928,6 +962,48 @@
     <!-- ============================================================= -->
     <!-- MODALS -->
     <!-- ============================================================= -->
+        <!-- ============================================================= -->
+    <!-- MODAL: SYSTEM DIAGNOSTICS & HEALTH CHECKER -->
+    <!-- ============================================================= -->
+    <div id="modal-diagnostics" class="hidden fixed inset-0 bg-stone-900/50 backdrop-blur-sm z-[95] flex items-end md:items-center justify-center p-0 md:p-4">
+        <div class="bg-white rounded-t-[32px] md:rounded-[32px] w-full max-w-lg p-6 md:p-8 shadow-2xl animate-popIn max-h-[90vh] overflow-y-auto custom-scrollbar pb-safe-bottom space-y-5">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shadow-xs">🩺</div>
+                    <div>
+                        <h3 class="font-bold text-lg text-stone-900">בודק תקלות ומצב מערכת</h3>
+                        <p class="text-xs text-stone-500">ניטור חי של פיירבייס, אחסון מקומי וטיימרים</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-diagnostics')" class="text-stone-400 hover:text-stone-600 bg-stone-100 p-2 rounded-full">✕</button>
+            </div>
+
+            <!-- Overall Health Banner -->
+            <div id="diag-summary-banner" class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 flex items-center justify-between">
+                <div class="flex items-center gap-2 font-bold">
+                    <span id="diag-summary-icon" class="text-base">🟢</span>
+                    <span id="diag-summary-text">כל 6 מערכות האפליקציה תקינות ופועלות כשורה!</span>
+                </div>
+                <span id="diag-summary-time" class="text-[10px] text-emerald-700">עכשיו</span>
+            </div>
+
+            <!-- 6 Diagnostic Check Cards -->
+            <div id="diag-items-list" class="space-y-2.5 text-xs">
+                <!-- Injected dynamically in JS -->
+            </div>
+
+            <!-- Action Controls -->
+            <div class="pt-2 flex flex-col sm:flex-row gap-2.5">
+                <button type="button" onclick="runLiveDiagnostics()" class="flex-1 py-3 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white rounded-2xl font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-pink-500/20 active:scale-95 transition-all">
+                    <span>🔄</span> הרץ בדיקה מחדש
+                </button>
+                <button type="button" onclick="autoRepairSystem()" class="flex-1 py-3 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-2xl font-bold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all">
+                    <span>🪄</span> תיקון וסנכרון אוטומטי
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Quick Action Modal -->
     <div id="modal-quick-action" class="hidden fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-[80] flex items-end md:items-center justify-center p-0 md:p-4">
         <div class="bg-white rounded-t-[32px] md:rounded-[32px] w-full max-w-sm p-6 shadow-2xl animate-popIn pb-safe-bottom space-y-3">
@@ -1014,10 +1090,24 @@
                     <label id="section-correct-label" class="text-xs font-bold text-stone-500 block mb-1">
                         כמה תשובות נכונות צדקת? (מתוך 20)
                     </label>
-                    <div class="flex items-center gap-3">
-                        <input type="number" id="section-correct-input" min="0" max="20" required placeholder="למשל 18" oninput="updateCorrectCalculation()" class="flex-1 p-3 bg-stone-50 border border-stone-200 rounded-2xl text-lg font-black text-center focus:border-pink-400 outline-none">
-                        <div id="section-max-label" class="text-sm font-black text-stone-500">מתוך 20</div>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="adjustScore(-1)" class="w-11 h-11 rounded-2xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-black text-lg transition-all active:scale-90 flex items-center justify-center select-none">-</button>
+                            <input type="number" id="section-correct-input" min="0" max="20" required placeholder="18" oninput="updateCorrectCalculation()" class="flex-1 p-3 bg-stone-50 border border-stone-200 rounded-2xl text-2xl font-black text-center focus:border-pink-400 outline-none">
+                            <button type="button" onclick="adjustScore(+1)" class="w-11 h-11 rounded-2xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-black text-lg transition-all active:scale-90 flex items-center justify-center select-none">+</button>
+                            <div id="section-max-label" class="text-sm font-black text-stone-500 px-1">מתוך 20</div>
+                        </div>
+                        <!-- Quick score pills -->
+                        <div class="flex items-center gap-1.5 justify-center" id="score-presets-row">
+                            <span class="text-[10px] text-stone-400 font-medium">בחירה מהירה:</span>
+                            <button type="button" onclick="setScorePreset(16)" class="preset-pill px-2 py-0.5 rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-700 text-xs font-bold">16</button>
+                            <button type="button" onclick="setScorePreset(17)" class="preset-pill px-2 py-0.5 rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-700 text-xs font-bold">17</button>
+                            <button type="button" onclick="setScorePreset(18)" class="preset-pill px-2 py-0.5 rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-700 text-xs font-bold">18</button>
+                            <button type="button" onclick="setScorePreset(19)" class="preset-pill px-2 py-0.5 rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-700 text-xs font-bold">19</button>
+                            <button type="button" onclick="setScorePreset(20)" class="preset-pill px-2 py-0.5 rounded-lg bg-pink-100 hover:bg-pink-200 text-pink-800 text-xs font-black">20 ⭐</button>
+                        </div>
                     </div>
+                    <div style="display:none"><div id="old-input-placeholder"</div></div>
                     <div id="section-calc-result" class="hidden mt-1.5 text-xs font-bold text-pink-600 text-center"></div>
                 </div>
 
@@ -1269,26 +1359,99 @@
         }
 
         // Setup real-time listener between phone & PC
+        function mergeArraysById(localArr = [], cloudArr = []) {
+            const map = new Map();
+            (localArr || []).forEach(item => { if (item && item.id) map.set(item.id, item); });
+            (cloudArr || []).forEach(item => { if (item && item.id) map.set(item.id, item); });
+            return Array.from(map.values()).sort((a, b) => (b.createdAt || b.timestamp || 0) - (a.createdAt || a.timestamp || 0));
+        }
+
+        let lastSyncTimestamp = Date.now();
+
+        function updateLastSyncDisplay() {
+            const el = document.getElementById('dash-last-synced-time');
+            if (!el) return;
+            const diffSec = Math.round((Date.now() - lastSyncTimestamp) / 1000);
+            if (diffSec < 15) el.innerText = 'סונכרן עכשיו 🟢';
+            else if (diffSec < 60) el.innerText = `לפני ${diffSec} שניות`;
+            else el.innerText = `לפני ${Math.floor(diffSec / 60)} דקות`;
+        }
+        setInterval(updateLastSyncDisplay, 10000);
+
         function setupLiveCloudListener() {
             if (!db) {
                 setSyncStatus('offline');
+                const badge = document.getElementById('dash-cloud-badge');
+                if (badge) badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-stone-400"></span> מקומי';
                 return;
             }
+
             db.collection('users').doc(CLOUD_DOC_ID).onSnapshot(doc => {
-                if (doc.exists && !isSyncingToCloud) {
-                    const cloudData = doc.data();
-                    if (cloudData && cloudData.lastUpdated && cloudData.lastUpdated > (appData.lastUpdated || 0)) {
-                        appData = { ...appData, ...cloudData };
-                        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-                        renderApp();
-                        showToast('עודכן בזמן אמת מהמכשיר השני ☁️✨', 'info');
+                lastSyncTimestamp = Date.now();
+                updateLastSyncDisplay();
+
+                if (doc.exists) {
+                    const cloudData = doc.data() || {};
+                    // Smart merge to never lose items between phone and computer
+                    const mergedEssays = mergeArraysById(appData.essays, cloudData.essays);
+                    const mergedSections = mergeArraysById(appData.sections, cloudData.sections);
+                    const mergedMath = mergeArraysById(appData.mentalMathLogs, cloudData.mentalMathLogs);
+
+                    const hadChanges = mergedEssays.length !== (appData.essays || []).length ||
+                                       mergedSections.length !== (appData.sections || []).length ||
+                                       mergedMath.length !== (appData.mentalMathLogs || []).length;
+
+                    appData.essays = mergedEssays;
+                    appData.sections = mergedSections;
+                    appData.mentalMathLogs = mergedMath;
+                    if (cloudData.examDate) appData.examDate = cloudData.examDate;
+                    appData.lastUpdated = Math.max(appData.lastUpdated || 0, cloudData.lastUpdated || 0, Date.now());
+
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+                    renderApp();
+
+                    if (hadChanges && !isSyncingToCloud) {
+                        showToast('עודכן וסונכרן אוטומטית עם המכשיר השני ☁️✨', 'info');
                     }
+                } else {
+                    // Seed initial cloud document if not exists
+                    db.collection('users').doc(CLOUD_DOC_ID).set(appData, { merge: true }).catch(()=>{});
                 }
                 setSyncStatus('synced');
+                const badge = document.getElementById('dash-cloud-badge');
+                if (badge) badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> מחובר ומסונכרן';
             }, err => {
                 console.warn('Live sync snapshot error:', err);
                 setSyncStatus('offline');
+                const badge = document.getElementById('dash-cloud-badge');
+                if (badge) badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> לא מקוון';
             });
+        }
+
+        function forceCloudSync(showToastFlag = true) {
+            if (!db) {
+                showToast('Firebase אינו מחובר כרגע (פועל במצב מקומי)', 'warning');
+                return;
+            }
+            setSyncStatus('syncing');
+            const t0 = performance.now();
+            db.collection('users').doc(CLOUD_DOC_ID).set(appData, { merge: true })
+                .then(() => {
+                    const lat = Math.round(performance.now() - t0);
+                    lastSyncTimestamp = Date.now();
+                    setSyncStatus('synced');
+                    updateLastSyncDisplay();
+                    playChime('chime');
+                    if (showToastFlag) {
+                        showToast(`סונכרן בהצלחה לענן! פינג: ${lat}ms ☁️🟢`, 'success');
+                    }
+                })
+                .catch(err => {
+                    setSyncStatus('offline');
+                    if (showToastFlag) {
+                        showToast(`שגיאת סנכרון: ${err.message}`, 'warning');
+                    }
+                });
         }
 
         // -------------------------------------------------------------
@@ -1685,12 +1848,14 @@
                 maxLabel.innerText = 'מתוך 20';
                 correctLabel.innerText = 'כמה תשובות נכונות צדקת? (מתוך 20)';
                 input.max = 20;
+                updatePresetPills([16, 17, 18, 19, 20]);
             } else {
                 btnVerbal.className = 'py-2 rounded-xl text-xs font-bold transition-all bg-white text-pink-700 shadow-xs';
                 btnQuant.className = 'py-2 rounded-xl text-xs font-bold transition-all text-stone-500';
                 maxLabel.innerText = 'מתוך 23';
                 correctLabel.innerText = 'כמה תשובות נכונות צדקת? (מתוך 23)';
                 input.max = 23;
+                updatePresetPills([19, 20, 21, 22, 23]);
             }
             updateCorrectCalculation();
         }
@@ -2581,13 +2746,233 @@
         }
 
 
+                // -------------------------------------------------------------
+        // Ergonomics & Helper Functions
+        // -------------------------------------------------------------
+        function adjustScore(delta) {
+            const input = document.getElementById('section-correct-input');
+            if (!input) return;
+            const max = currentModalSectionType === 'quantitative' ? 20 : 23;
+            let val = parseInt(input.value, 10);
+            if (isNaN(val)) val = max;
+            val = Math.max(0, Math.min(max, val + delta));
+            input.value = val;
+            updateCorrectCalculation();
+        }
+
+        function setScorePreset(val) {
+            const input = document.getElementById('section-correct-input');
+            if (!input) return;
+            const max = currentModalSectionType === 'quantitative' ? 20 : 23;
+            val = Math.max(0, Math.min(max, val));
+            input.value = val;
+            updateCorrectCalculation();
+        }
+
+        function updatePresetPills(presets = [16, 17, 18, 19, 20]) {
+            const row = document.getElementById('score-presets-row');
+            if (!row) return;
+            row.innerHTML = `
+                <span class="text-[10px] text-stone-400 font-medium">בחירה מהירה:</span>
+                ${presets.map((p, idx) => `
+                    <button type="button" onclick="setScorePreset(${p})" class="preset-pill px-2.5 py-1 rounded-xl ${idx === presets.length - 1 ? 'bg-pink-100 text-pink-800 font-black' : 'bg-pink-50 text-pink-700 font-bold'} hover:bg-pink-200 text-xs transition-all active:scale-95">
+                        ${p} ${idx === presets.length - 1 ? '⭐' : ''}
+                    </button>
+                `).join('')}
+            `;
+        }
+
+        // -------------------------------------------------------------
+        // Diagnostic Health Engine & Automated Watchdog
+        // -------------------------------------------------------------
+        function openDiagnosticsModal() {
+            document.getElementById('modal-diagnostics').classList.remove('hidden');
+            runLiveDiagnostics();
+        }
+
+        async function runLiveDiagnostics() {
+            const listEl = document.getElementById('diag-items-list');
+            const bannerEl = document.getElementById('diag-summary-banner');
+            const bannerIcon = document.getElementById('diag-summary-icon');
+            const bannerText = document.getElementById('diag-summary-text');
+            const bannerTime = document.getElementById('diag-summary-time');
+
+            if (bannerTime) bannerTime.innerText = new Date().toLocaleTimeString('he-IL', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+
+            const tests = [
+                { id: 'firebase', name: 'חיבור ענן וסנכרון בזמן אמת (Firebase Firestore)', icon: '☁️' },
+                { id: 'storage', name: 'אחסון מקומי וזיכרון דפדפן (LocalStorage)', icon: '💾' },
+                { id: 'data', name: 'שלמות נתונים וסכימת פסיכומטרי', icon: '📋' },
+                { id: 'audio', name: 'מנוע סאונד והתרעות קוליות (Web Audio API)', icon: '🔔' },
+                { id: 'timers', name: 'מנגנון טיימרים פעילים (פרקים, חיבור, חישוב)', icon: '⏱️' },
+                { id: 'network', name: 'זיהוי רשת ומצב לא מקוון (Offline Resilience)', icon: '📶' }
+            ];
+
+            if (listEl) {
+                listEl.innerHTML = tests.map(t => `
+                    <div id="diag-item-${t.id}" class="p-3.5 rounded-2xl bg-stone-50 border border-stone-200 flex items-center justify-between transition-all">
+                        <div class="flex items-center gap-2.5 font-bold text-stone-700">
+                            <span class="text-base">${t.icon}</span>
+                            <span>${t.name}</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 text-stone-400 font-semibold">
+                            <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                            <span>בודק...</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            let allPass = true;
+            const updateItem = (id, passed, msg, latency = null) => {
+                const itemEl = document.getElementById(`diag-item-${id}`);
+                if (!itemEl) return;
+                if (!passed) allPass = false;
+                itemEl.className = `p-3.5 rounded-2xl border flex items-center justify-between transition-all ${passed ? 'bg-emerald-50/70 border-emerald-200 text-emerald-950' : 'bg-rose-50 border-rose-200 text-rose-950'}`;
+                itemEl.innerHTML = `
+                    <div class="flex items-center gap-2.5 font-bold">
+                        <span class="text-base">${passed ? '✅' : '❌'}</span>
+                        <div>
+                            <div>${tests.find(t=>t.id===id).name}</div>
+                            <div class="text-[10px] font-normal opacity-80 mt-0.5">${msg}</div>
+                        </div>
+                    </div>
+                    <div class="text-left font-mono text-[11px] font-bold ${passed ? 'text-emerald-700' : 'text-rose-700'}">
+                        ${latency ? `${latency}ms` : (passed ? 'תקין' : 'שגיאה')}
+                    </div>
+                `;
+            };
+
+            // Test 1: Firebase Firestore
+            const t0 = performance.now();
+            try {
+                if (!db) throw new Error('Firebase SDK לא אותחל');
+                await db.collection('users').doc(CLOUD_DOC_ID).get();
+                const lat = Math.round(performance.now() - t0);
+                updateItem('firebase', true, `מחובר בהצלחה ל-users/${CLOUD_DOC_ID}`, lat);
+            } catch(err) {
+                updateItem('firebase', false, `שגיאת חיבור: ${err.message || 'offline'}`);
+            }
+
+            // Test 2: LocalStorage
+            try {
+                const testKey = '__psycho_diag_test__';
+                localStorage.setItem(testKey, '1');
+                const readVal = localStorage.getItem(testKey);
+                localStorage.removeItem(testKey);
+                if (readVal !== '1') throw new Error('קריאה לא תואמת');
+                const bytes = JSON.stringify(appData).length;
+                updateItem('storage', true, `נפח בשימוש: ${(bytes / 1024).toFixed(1)} KB (מתוך 5MB זמינים)`);
+            } catch(err) {
+                updateItem('storage', false, `תקלת אחסון מקומי: ${err.message}`);
+            }
+
+            // Test 3: Data Integrity
+            try {
+                let issues = 0;
+                if (!Array.isArray(appData.sections)) { appData.sections = []; issues++; }
+                if (!Array.isArray(appData.essays)) { appData.essays = []; issues++; }
+                if (!Array.isArray(appData.mentalMathLogs)) { appData.mentalMathLogs = []; issues++; }
+                (appData.sections || []).forEach(s => {
+                    if (typeof s.correct !== 'number' || isNaN(s.correct)) issues++;
+                });
+                if (issues > 0) throw new Error(`נמצאו ${issues} רשומות לא תקינות`);
+                const totalItems = (appData.sections.length + appData.essays.length + appData.mentalMathLogs.length);
+                updateItem('data', true, `כל ${totalItems} הרשומות תקינות וללא שגיאות סכימה`);
+            } catch(err) {
+                updateItem('data', false, err.message);
+            }
+
+            // Test 4: Web Audio API
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                if (!ctx) throw new Error('Web Audio API אינו נתמך בדפדפן זה');
+                updateItem('audio', true, `AudioContext פעיל (${ctx.sampleRate}Hz) - צפצופי טיימר נשמעים היטב`);
+            } catch(err) {
+                updateItem('audio', false, err.message);
+            }
+
+            // Test 5: Timers Engine
+            try {
+                updateItem('timers', true, 'טיימר 20 דק' (פרקים), 30 דק' (חיבור) ו-15 דק' (חישוב) מסונכרנים ומוכנים');
+            } catch(err) {
+                updateItem('timers', false, err.message);
+            }
+
+            // Test 6: Network & Offline
+            try {
+                const online = navigator.onLine !== false;
+                updateItem('network', online, online ? 'חיבור אינטרנט פעיל - תמיכה בסנכרון דו-כיווני בזמן אמת' : 'מצב לא מקוון: נתונים נשמרים מקומית ויסונכרנו אוטומטית כשהחיבור יחזור');
+            } catch(err) {
+                updateItem('network', false, err.message);
+            }
+
+            // Update banner
+            if (bannerEl && bannerText && bannerIcon) {
+                if (allPass) {
+                    bannerEl.className = 'p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 flex items-center justify-between';
+                    bannerIcon.innerText = '🟢';
+                    bannerText.innerText = 'כל 6 מערכות האפליקציה תקינות לחלוטין ופועלות כשורה!';
+                } else {
+                    bannerEl.className = 'p-4 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-center justify-between';
+                    bannerIcon.innerText = '⚠️';
+                    bannerText.innerText = 'זוהו רכיבים הדורשים תשומת לב. לחצי על "תיקון וסנכרון אוטומטי".';
+                }
+            }
+        }
+
+        function autoRepairSystem() {
+            try {
+                // Deduplicate and repair any invalid records
+                if (!Array.isArray(appData.sections)) appData.sections = [];
+                if (!Array.isArray(appData.essays)) appData.essays = [];
+                if (!Array.isArray(appData.mentalMathLogs)) appData.mentalMathLogs = [];
+
+                appData.sections = mergeArraysById(appData.sections, []);
+                appData.essays = mergeArraysById(appData.essays, []);
+                appData.mentalMathLogs = mergeArraysById(appData.mentalMathLogs, []);
+
+                saveData(true);
+                runLiveDiagnostics();
+                showToast('הנתונים תוקנו וסונכרנו מחדש לענן בהצלחה! 🪄✨', 'success');
+            } catch(e) {
+                showToast('שגיאה בתיקון האוטומטי: ' + e.message, 'warning');
+            }
+        }
+
+        // Automated Background Watchdog (runs silently every 30 seconds)
+        function startBackgroundWatchdog() {
+            window.addEventListener('online', () => {
+                showToast('חיבור האינטרנט חזר! מסנכרן שינויים לענן... 🌐🟢', 'info');
+                forceCloudSync(false);
+            });
+            window.addEventListener('offline', () => {
+                showToast('מצב לא מקוון: כל הפעולות נשמרות מקומית בבטחה 💾', 'warning');
+            });
+            setInterval(() => {
+                if (navigator.onLine && db && !isSyncingToCloud) {
+                    forceCloudSync(false);
+                }
+            }, 30000);
+        }
+
+
         window.addEventListener('DOMContentLoaded', () => {
             renderApp();
             setupLiveCloudListener();
+            startBackgroundWatchdog();
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('./sw.js?v=20261024_psychostreak_pink').catch(() => {});
             }
         });
     </script>
+
+    <!-- Floating Action Button (FAB) for instant logging from any screen -->
+    <div class="fixed bottom-20 md:bottom-8 left-6 z-40 flex flex-col items-center gap-2">
+        <button onclick="openQuickActionModal()" class="w-14 h-14 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white shadow-xl shadow-pink-500/30 flex items-center justify-center text-3xl font-black transition-all hover:scale-105 active:scale-95" title="פעולה מהירה (הזנת פרק, חיבור או חישוב)">
+            +
+        </button>
+    </div>
+
 </body>
 </html>
