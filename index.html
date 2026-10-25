@@ -93,8 +93,153 @@
         <button onclick="dismissWarning()" class="bg-black/20 hover:bg-black/30 px-3 py-1.5 rounded-xl text-xs font-bold transition-all">הבנתי</button>
     </div>
 
-    <!-- Outer Wrapper -->
-    <div class="min-h-screen flex flex-col md:flex-row" dir="rtl">
+
+    <!-- ============================================================= -->
+    <!-- FULLSCREEN LOGIN & REGISTRATION VIEW -->
+    <!-- ============================================================= -->
+    <div id="view-login" class="fixed inset-0 z-50 bg-[#FFF5F7] flex items-center justify-center p-4 overflow-y-auto" dir="rtl">
+        <!-- Decorative Glows -->
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-pink-300/30 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-rose-200/40 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 w-full max-w-md bg-white/95 backdrop-blur-xl border border-pink-100 p-6 sm:p-8 rounded-[32px] shadow-2xl shadow-pink-500/10 animate-popIn">
+            <!-- Logo & Brand Header -->
+            <div class="text-center space-y-3 mb-6">
+                <img src="./icons/icon-192.png" alt="PsychoStreak Logo" class="w-20 h-20 mx-auto rounded-3xl shadow-md border-2 border-pink-200/80 object-cover">
+                <div>
+                    <h1 class="text-2xl font-black text-stone-900 tracking-tight">PsychoStreak</h1>
+                    <p class="text-xs text-pink-600 font-bold mt-0.5">רצף למידה, פרקים וסימולציות לפסיכומטרי 🎯</p>
+                </div>
+                <div class="flex items-center justify-center gap-2 pt-1">
+                    <span class="px-2.5 py-0.5 rounded-full bg-pink-50 text-pink-700 border border-pink-200/60 text-[11px] font-bold">☁️ סנכרון ענן מלא</span>
+                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60 text-[11px] font-bold">📱 מותאם לנייד ומחשב</span>
+                </div>
+            </div>
+
+            <!-- Error Banner -->
+            <div id="login-error-banner" class="hidden mb-4 p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-xs text-rose-800 font-bold flex items-center gap-2">
+                <span>⚠️</span>
+                <span id="login-error-text">שגיאה</span>
+            </div>
+
+            <!-- Login Form -->
+            <form onsubmit="handleLoginSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-stone-600 mb-1.5">שם משתמש / כינוי</label>
+                    <div class="relative">
+                        <input type="text" id="login-username" required autocomplete="username" dir="rtl" placeholder="למשל: shelly" class="w-full p-3.5 pr-10 bg-stone-50 border border-stone-200 rounded-2xl text-sm font-semibold text-stone-900 focus:bg-white focus:border-pink-400 focus:ring-2 focus:ring-pink-100 outline-none transition-all">
+                        <span class="absolute right-3.5 top-3.5 text-stone-400 text-sm">👤</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-stone-600 mb-1.5">סיסמה</label>
+                    <div class="relative">
+                        <input type="password" id="login-password" required autocomplete="current-password" dir="rtl" placeholder="הקלידי סיסמה..." class="w-full p-3.5 pr-10 bg-stone-50 border border-stone-200 rounded-2xl text-sm font-semibold text-stone-900 focus:bg-white focus:border-pink-400 focus:ring-2 focus:ring-pink-100 outline-none transition-all">
+                        <span class="absolute right-3.5 top-3.5 text-stone-400 text-sm">🔒</span>
+                    </div>
+                </div>
+
+                <button type="submit" id="login-submit-btn" class="w-full py-4 bg-gradient-to-r from-pink-500 via-rose-500 to-pink-500 hover:from-pink-600 hover:to-rose-600 text-white rounded-2xl font-bold shadow-lg shadow-pink-500/25 transition-all text-sm active:scale-95 flex items-center justify-center gap-2">
+                    <span>כניסה / הרשמה למערכת ✨</span>
+                </button>
+            </form>
+
+            <div class="mt-6 pt-5 border-t border-stone-100 text-center space-y-2">
+                <p class="text-[11px] text-stone-500">
+                    ✨ <strong>משתמשת חדשה?</strong> החשבון ייווצר ויתחבר אוטומטית בענן!
+                </p>
+                <p class="text-[10px] text-stone-400">
+                    כל הנתונים מסתנכרנים אוטומטית בין המחשב, הטלפון והטאבלט.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- FULLSCREEN ADMIN / GOD MODE VIEW -->
+    <!-- ============================================================= -->
+    <div id="view-admin" class="fixed inset-0 z-50 bg-stone-950 text-stone-100 overflow-y-auto hidden p-4 md:p-8" dir="rtl">
+        <div class="max-w-6xl mx-auto space-y-6">
+            <!-- Admin Header -->
+            <div class="bg-gradient-to-r from-stone-900 via-purple-950/40 to-stone-900 border border-stone-800 p-6 rounded-3xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-purple-500/20 text-purple-300 border border-purple-500/30 flex items-center justify-center text-3xl shadow-inner">
+                        🛡️
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h2 class="text-xl md:text-2xl font-black text-white">PsychoStreak - מצב ניהול מערכת (God Mode)</h2>
+                            <span class="px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 text-xs font-bold">Admin</span>
+                        </div>
+                        <p class="text-xs text-stone-400 mt-1">סקירת משתמשים פעילים, סימולציות, פרקים וסטטיסטיקות סנכרון ענן</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 w-full md:w-auto">
+                    <button onclick="loadAdminDashboard()" class="flex-1 md:flex-none px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center justify-center gap-2">
+                        <span>🔄</span> רענון נתונים
+                    </button>
+                    <button onclick="logoutAdmin()" class="flex-1 md:flex-none px-4 py-2.5 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center justify-center gap-2">
+                        <span>🚪</span> יציאה מניהול
+                    </button>
+                </div>
+            </div>
+
+            <!-- Admin Stats Overview -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-stone-900/90 border border-stone-800 p-4 rounded-2xl">
+                    <div class="text-xs font-bold text-stone-400 uppercase">משתמשים רשומים</div>
+                    <div id="admin-stat-users" class="text-2xl md:text-3xl font-black text-pink-400 mt-1">0</div>
+                </div>
+                <div class="bg-stone-900/90 border border-stone-800 p-4 rounded-2xl">
+                    <div class="text-xs font-bold text-stone-400 uppercase">סה"כ פרקים שנפתרו</div>
+                    <div id="admin-stat-sections" class="text-2xl md:text-3xl font-black text-blue-400 mt-1">0</div>
+                </div>
+                <div class="bg-stone-900/90 border border-stone-800 p-4 rounded-2xl">
+                    <div class="text-xs font-bold text-stone-400 uppercase">סה"כ חיבורים</div>
+                    <div id="admin-stat-essays" class="text-2xl md:text-3xl font-black text-amber-400 mt-1">0</div>
+                </div>
+                <div class="bg-stone-900/90 border border-stone-800 p-4 rounded-2xl">
+                    <div class="text-xs font-bold text-stone-400 uppercase">סה"כ סימולציות</div>
+                    <div id="admin-stat-simulations" class="text-2xl md:text-3xl font-black text-emerald-400 mt-1">0</div>
+                </div>
+            </div>
+
+            <!-- Users Table -->
+            <div class="bg-stone-900/90 border border-stone-800 rounded-3xl overflow-hidden shadow-xl">
+                <div class="p-5 border-b border-stone-800 flex justify-between items-center">
+                    <h3 class="font-bold text-base text-white flex items-center gap-2">
+                        <span>👥</span> רשימת משתמשים בענן (Firestore)
+                    </h3>
+                    <span id="admin-users-count" class="text-xs text-stone-400 font-bold">0 משתמשים</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-xs">
+                        <thead class="bg-stone-950/60 text-stone-400 font-bold border-b border-stone-800">
+                            <tr>
+                                <th class="p-3.5">שם משתמש</th>
+                                <th class="p-3.5">פרקים</th>
+                                <th class="p-3.5">חיבורים</th>
+                                <th class="p-3.5">חישוב מהיר</th>
+                                <th class="p-3.5">סימולציות</th>
+                                <th class="p-3.5">שיא פסיכומטרי</th>
+                                <th class="p-3.5">עדכון אחרון</th>
+                                <th class="p-3.5 text-center">פעולות</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-table-body" class="divide-y divide-stone-800/60 font-medium">
+                            <tr>
+                                <td colspan="8" class="p-8 text-center text-stone-500">טוען נתונים ממסד הנתונים... ⏳</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Outer Wrapper (App Root) -->
+    <div id="app-root" class="min-h-screen flex flex-col md:flex-row hidden" dir="rtl">
 
         <!-- ============================================================= -->
         <!-- DESKTOP SIDEBAR -->
@@ -158,24 +303,36 @@
                     <span class="text-lg">📊</span>
                     <span>דיוק וסטטיסטיקה</span>
                 </button>
-                <button onclick="openDiagnosticsModal()" id="nav-btn-diagnostics" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-semibold transition-all active:scale-95 text-stone-500 hover:bg-emerald-50 hover:text-emerald-800">
-                    <span class="text-base">🩺</span>
-                    <span>בודק תקלות ומערכת</span>
-                    <span class="mr-auto w-2 h-2 rounded-full bg-emerald-500"></span>
-                </button>
+                
             </nav>
 
-            <!-- Bottom Action Button -->
+            <!-- Bottom Actions & User Profile -->
             <div class="mt-auto pt-6 space-y-3">
-                <button onclick="openQuickActionModal()" class="w-full py-4 bg-gradient-to-r from-pink-400 to-rose-400 hover:from-pink-500 hover:to-rose-500 text-white rounded-2xl font-bold shadow-md shadow-pink-500/20 flex items-center justify-center gap-2 text-sm transition-all active:scale-95">
+                <button onclick="openQuickActionModal()" class="w-full py-3.5 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white rounded-2xl font-bold shadow-md shadow-pink-500/20 flex items-center justify-center gap-2 text-sm transition-all active:scale-95">
                     <span>+</span> תיעוד תרגול / פרק
                 </button>
-                <button onclick="openExamDateModal()" class="w-full py-2.5 text-xs text-stone-500 hover:text-pink-600 font-semibold bg-stone-50 hover:bg-pink-50 rounded-2xl transition-colors flex items-center justify-center gap-1.5 active:scale-95">
+                <button onclick="openExamDateModal()" class="w-full py-2 text-xs text-stone-500 hover:text-pink-600 font-semibold bg-stone-50 hover:bg-pink-50 rounded-2xl transition-colors flex items-center justify-center gap-1.5 active:scale-95">
                     <span>⏳</span> הגדרת מועד בחינה
                 </button>
-                <button onclick="openFirebaseConfigModal()" class="w-full py-2.5 text-xs text-stone-600 hover:text-pink-700 font-bold bg-pink-50/60 hover:bg-pink-100/70 border border-pink-200/60 rounded-2xl transition-all flex items-center justify-center gap-1.5 active:scale-95">
-                    <span>⚡</span> פיירבייס עצמאי (הגדרות ענן)
-                </button>
+
+                <!-- Active User Card & Logout -->
+                <div class="p-3 rounded-2xl bg-pink-50/50 border border-pink-100/80 flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-pink-400 to-rose-400 text-white font-black text-sm flex items-center justify-center shadow-xs">
+                            <span class="user-avatar-char">🌸</span>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs font-bold text-stone-800 user-display-name">טוען...</div>
+                            <div class="text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                <span>מסונכרן בענן</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="logoutUser()" class="p-2 text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all text-xs font-bold" title="התנתקות מהחשבון">
+                        🚪 יציאה
+                    </button>
+                </div>
             </div>
         </aside>
 
@@ -202,6 +359,9 @@
                 </button>
                 <button onclick="openQuickActionModal()" class="w-8 h-8 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-black text-lg flex items-center justify-center shadow-sm active:scale-90" title="הזנה מהירה (+)">
                     +
+                </button>
+                <button onclick="logoutUser()" class="p-1.5 text-stone-400 hover:text-rose-600 bg-stone-50 rounded-xl text-xs" title="התנתקות">
+                    🚪
                 </button>
             </div>
         </header>
@@ -339,38 +499,6 @@
 
 
 
-                <!-- Real-Time Cloud & Diagnostics Bar (Prominent Status) -->
-                <div class="bg-gradient-to-r from-stone-900 via-stone-800 to-stone-900 text-white p-4 md:p-5 rounded-3xl shadow-md border border-stone-700/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-pink-500/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>
-                    <div class="relative z-10 flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-xl">☁️</div>
-                        <div>
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs font-bold text-pink-300">סנכרון ענן בזמן אמת (Firebase Firestore)</span>
-                                <span id="dash-cloud-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> מחובר ומסונכרן
-                                </span>
-                            </div>
-                            <div class="text-[11px] text-stone-300 mt-0.5 flex items-center gap-2">
-                                <span>מסד נתונים: <code id="dash-firebase-project-id" class="bg-black/30 px-1.5 py-0.2 rounded text-pink-200">טוען...</code></span>
-                                <span>•</span>
-                                <span id="dash-last-synced-time">סונכרן כעת 🟢</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="relative z-10 flex items-center gap-2 w-full sm:w-auto flex-wrap">
-                        <button onclick="forceCloudSync(true)" class="flex-1 sm:flex-none px-3 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center justify-center gap-1.5 border border-white/10">
-                            <span>🔄</span> בדיקת סנכרון
-                        </button>
-                        <button onclick="openFirebaseConfigModal()" class="flex-1 sm:flex-none px-3 py-2 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center justify-center gap-1.5 shadow-sm">
-                            <span>⚡</span> פיירבייס עצמאי
-                        </button>
-                        <button onclick="openDiagnosticsModal()" class="flex-1 sm:flex-none px-3 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center justify-center gap-1.5 border border-white/10">
-                            <span>🩺</span> בדיקות
-                        </button>
-                    </div>
-                </div>
-                
                 <!-- Quick Timers & Action Row -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="bg-white p-5 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:border-pink-200 transition-all flex flex-col justify-between">
@@ -1728,17 +1856,31 @@
         }
 
         // -------------------------------------------------------------
-        // LocalStorage & Cloud Realtime Sync
+        // Multi-Device User Authentication & Cloud Realtime Sync Engine
         // -------------------------------------------------------------
-        const STORAGE_KEY = 'psychoStreak_data_v1';
-        const CLOUD_DOC_ID = 'shelly_psychostreak';
+        const USER_STORAGE_KEY = 'psychostreak_active_user';
+        const STORAGE_KEY_PREFIX = 'psychostreak_data_';
+        const LEGACY_STORAGE_KEY = 'psychoStreak_data_v1';
+        const LEGACY_CLOUD_DOC_ID = 'shelly_psychostreak';
+
+        let activeUser = localStorage.getItem(USER_STORAGE_KEY) || null;
+        let isAdminLoggedIn = false;
+        let adminImpersonating = false;
+        let liveSyncUnsubscribe = null;
+        let lastSyncTimestamp = Date.now();
+
+        function getActiveStorageKey() {
+            return STORAGE_KEY_PREFIX + (activeUser || 'default');
+        }
 
         function loadData() {
             let data = null;
             try {
-                const saved = localStorage.getItem(STORAGE_KEY);
+                const key = getActiveStorageKey();
+                const saved = localStorage.getItem(key) || localStorage.getItem(LEGACY_STORAGE_KEY);
                 if (saved) data = JSON.parse(saved);
             } catch(e) {}
+
             if (!data || typeof data !== 'object') {
                 data = {
                     examDate: '2026-12-25',
@@ -1750,6 +1892,9 @@
                     lastUpdated: 0
                 };
             }
+            if (!Array.isArray(data.essays)) data.essays = [];
+            if (!Array.isArray(data.sections)) data.sections = [];
+            if (!Array.isArray(data.mentalMathLogs)) data.mentalMathLogs = [];
             if (!Array.isArray(data.officialScores)) data.officialScores = [];
             if (!Array.isArray(data.simulations)) data.simulations = [];
             return data;
@@ -1757,18 +1902,186 @@
 
         let appData = loadData();
 
+        function updateUserInterface() {
+            const displayName = activeUser ? (activeUser === 'shelly' ? 'שלי' : activeUser) : 'משתמשת';
+            const firstChar = displayName ? displayName.charAt(0).toUpperCase() : '🌸';
+
+            document.querySelectorAll('.user-display-name').forEach(el => {
+                el.innerText = displayName;
+            });
+            document.querySelectorAll('.user-avatar-char').forEach(el => {
+                el.innerText = firstChar;
+            });
+        }
+
+        function showLoginError(msg) {
+            const banner = document.getElementById('login-error-banner');
+            const text = document.getElementById('login-error-text');
+            if (banner && text) {
+                text.innerText = msg;
+                banner.classList.remove('hidden');
+            }
+        }
+
+        function hideLoginError() {
+            const banner = document.getElementById('login-error-banner');
+            if (banner) banner.classList.add('hidden');
+        }
+
+        async function handleLoginSubmit(event) {
+            event.preventDefault();
+            hideLoginError();
+
+            const usernameInput = document.getElementById('login-username');
+            const passwordInput = document.getElementById('login-password');
+            const submitBtn = document.getElementById('login-submit-btn');
+
+            const username = (usernameInput?.value || '').trim();
+            const password = (passwordInput?.value || '').trim();
+
+            if (!username || !password) {
+                showLoginError('נא להזין שם משתמש וסיסמה.');
+                return;
+            }
+
+            const cleanUser = username.toLowerCase();
+            const cleanPass = password.toLowerCase();
+
+            // Admin / God Mode Check
+            if ((cleanUser === 'admin' || cleanUser === 'אדמין') && (cleanPass === 'admin' || cleanPass === 'אדמין')) {
+                isAdminLoggedIn = true;
+                document.getElementById('view-login').classList.add('hidden');
+                document.getElementById('app-root').classList.add('hidden');
+                document.getElementById('view-admin').classList.remove('hidden');
+                loadAdminDashboard();
+                showToast('ברוך הבא למצב ניהול מערכת (God Mode) 🛡️', 'success');
+                return;
+            }
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="animate-spin">⏳</span> מתחבר ומסנכרן...';
+            }
+
+            try {
+                if (db) {
+                    const userRef = db.collection('users').doc(cleanUser);
+                    const docSnap = await userRef.get();
+
+                    if (docSnap.exists) {
+                        const cloudData = docSnap.data() || {};
+                        if (cloudData.password && cloudData.password !== password) {
+                            showLoginError('סיסמה שגויה למשתמש קיים. נסי שוב.');
+                            if (submitBtn) {
+                                submitBtn.disabled = false;
+                                submitBtn.innerHTML = '<span>כניסה / הרשמה למערכת ✨</span>';
+                            }
+                            return;
+                        }
+
+                        loginAsUser(cleanUser, cloudData);
+                        showToast(`איזה כיף שחזרת, ${username}! ✨`, 'success');
+                    } else {
+                        // Create new user in Firestore
+                        let initialData = { ...appData, password: password, createdAt: Date.now(), username: cleanUser };
+
+                        // If user is Shelly, automatically migrate any data from legacy doc 'shelly_psychostreak'
+                        if (cleanUser === 'shelly') {
+                            try {
+                                const oldDoc = await db.collection('users').doc(LEGACY_CLOUD_DOC_ID).get();
+                                if (oldDoc.exists) {
+                                    const oldData = oldDoc.data() || {};
+                                    initialData.essays = mergeArraysById(initialData.essays, oldData.essays);
+                                    initialData.sections = mergeArraysById(initialData.sections, oldData.sections);
+                                    initialData.mentalMathLogs = mergeArraysById(initialData.mentalMathLogs, oldData.mentalMathLogs);
+                                    initialData.officialScores = mergeArraysById(initialData.officialScores, oldData.officialScores);
+                                    initialData.simulations = mergeArraysById(initialData.simulations, oldData.simulations);
+                                }
+                            } catch(e) {
+                                console.warn('Shelly migration error:', e);
+                            }
+                        }
+
+                        await userRef.set(initialData, { merge: true });
+                        loginAsUser(cleanUser, initialData);
+                        showToast(`חשבון חדש נוצר בהצלחה וסונכרן לענן! 🌸`, 'success');
+                    }
+                } else {
+                    // Offline fallback
+                    loginAsUser(cleanUser, { ...appData, password: password });
+                    showToast(`מחובר במצב מקומי (${cleanUser}) 💾`, 'info');
+                }
+            } catch(err) {
+                console.warn('Login error:', err);
+                loginAsUser(cleanUser, { ...appData, password: password });
+                showToast(`מחובר במצב מקומי (${cleanUser}) 💾`, 'info');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<span>כניסה / הרשמה למערכת ✨</span>';
+                }
+            }
+        }
+
+        function loginAsUser(username, cloudData = null) {
+            activeUser = username;
+            localStorage.setItem(USER_STORAGE_KEY, username);
+
+            if (cloudData) {
+                appData.essays = mergeArraysById(appData.essays, cloudData.essays);
+                appData.sections = mergeArraysById(appData.sections, cloudData.sections);
+                appData.mentalMathLogs = mergeArraysById(appData.mentalMathLogs, cloudData.mentalMathLogs);
+                appData.officialScores = mergeArraysById(appData.officialScores, cloudData.officialScores);
+                appData.simulations = mergeArraysById(appData.simulations, cloudData.simulations);
+                if (cloudData.examDate) appData.examDate = cloudData.examDate;
+            }
+
+            localStorage.setItem(getActiveStorageKey(), JSON.stringify(appData));
+
+            updateUserInterface();
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('view-admin').classList.add('hidden');
+            document.getElementById('app-root').classList.remove('hidden');
+
+            renderApp();
+            setupLiveCloudListener(activeUser);
+        }
+
+        function logoutUser() {
+            if (liveSyncUnsubscribe) {
+                liveSyncUnsubscribe();
+                liveSyncUnsubscribe = null;
+            }
+            activeUser = null;
+            isAdminLoggedIn = false;
+            adminImpersonating = false;
+            localStorage.removeItem(USER_STORAGE_KEY);
+
+            document.getElementById('app-root').classList.add('hidden');
+            document.getElementById('view-admin').classList.add('hidden');
+            document.getElementById('view-login').classList.remove('hidden');
+
+            const loginUserEl = document.getElementById('login-username');
+            const loginPassEl = document.getElementById('login-password');
+            if (loginUserEl) loginUserEl.value = '';
+            if (loginPassEl) loginPassEl.value = '';
+            hideLoginError();
+
+            showToast('התנתקת בהצלחה מהמערכת 👋', 'info');
+        }
+
         function saveData(syncToCloud = true) {
             appData.lastUpdated = Date.now();
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+            localStorage.setItem(getActiveStorageKey(), JSON.stringify(appData));
             renderApp();
 
-            if (syncToCloud && db) {
+            if (syncToCloud && db && activeUser && !adminImpersonating) {
                 setSyncStatus('syncing');
                 isSyncingToCloud = true;
-                db.collection('users').doc(CLOUD_DOC_ID).set(appData, { merge: true })
+                db.collection('users').doc(activeUser).set(appData, { merge: true })
                     .then(() => {
                         setSyncStatus('synced');
-                        setTimeout(() => { isSyncingToCloud = false; }, 400);
+                        setTimeout(() => { isSyncingToCloud = false; }, 300);
                     })
                     .catch(err => {
                         console.warn('Cloud sync error:', err);
@@ -1778,15 +2091,21 @@
             }
         }
 
-        // Setup real-time listener between phone & PC
-        function mergeArraysById(localArr = [], cloudArr = []) {
+        function mergeArraysById(localArr, remoteArr) {
             const map = new Map();
-            (localArr || []).forEach(item => { if (item && item.id) map.set(item.id, item); });
-            (cloudArr || []).forEach(item => { if (item && item.id) map.set(item.id, item); });
-            return Array.from(map.values()).sort((a, b) => (b.createdAt || b.timestamp || 0) - (a.createdAt || a.timestamp || 0));
+            (remoteArr || []).forEach(item => {
+                if (item && item.id) map.set(item.id, item);
+            });
+            (localArr || []).forEach(item => {
+                if (item && item.id) {
+                    const existing = map.get(item.id);
+                    if (!existing || (item.timestamp || item.date || 0) >= (existing.timestamp || existing.date || 0)) {
+                        map.set(item.id, item);
+                    }
+                }
+            });
+            return Array.from(map.values()).sort((a,b) => (b.createdAt || b.timestamp || 0) - (a.createdAt || a.timestamp || 0));
         }
-
-        let lastSyncTimestamp = Date.now();
 
         function updateLastSyncDisplay() {
             const el = document.getElementById('dash-last-synced-time');
@@ -1798,64 +2117,69 @@
         }
         setInterval(updateLastSyncDisplay, 10000);
 
-        function setupLiveCloudListener() {
-            if (!db) {
+        function setupLiveCloudListener(username = null) {
+            const targetUser = username || activeUser;
+            if (liveSyncUnsubscribe) {
+                liveSyncUnsubscribe();
+                liveSyncUnsubscribe = null;
+            }
+
+            if (!db || !targetUser) {
                 setSyncStatus('offline');
-                const badge = document.getElementById('dash-cloud-badge');
-                if (badge) badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-stone-400"></span> מקומי';
                 return;
             }
 
-            db.collection('users').doc(CLOUD_DOC_ID).onSnapshot(doc => {
+            liveSyncUnsubscribe = db.collection('users').doc(targetUser).onSnapshot(doc => {
                 lastSyncTimestamp = Date.now();
                 updateLastSyncDisplay();
+                setSyncStatus('synced');
 
                 if (doc.exists) {
                     const cloudData = doc.data() || {};
-                    // Smart merge to never lose items between phone and computer
                     const mergedEssays = mergeArraysById(appData.essays, cloudData.essays);
                     const mergedSections = mergeArraysById(appData.sections, cloudData.sections);
                     const mergedMath = mergeArraysById(appData.mentalMathLogs, cloudData.mentalMathLogs);
+                    const mergedOfficial = mergeArraysById(appData.officialScores, cloudData.officialScores);
+                    const mergedSimulations = mergeArraysById(appData.simulations, cloudData.simulations);
 
                     const hadChanges = mergedEssays.length !== (appData.essays || []).length ||
                                        mergedSections.length !== (appData.sections || []).length ||
-                                       mergedMath.length !== (appData.mentalMathLogs || []).length;
+                                       mergedMath.length !== (appData.mentalMathLogs || []).length ||
+                                       mergedOfficial.length !== (appData.officialScores || []).length ||
+                                       mergedSimulations.length !== (appData.simulations || []).length;
 
                     appData.essays = mergedEssays;
                     appData.sections = mergedSections;
                     appData.mentalMathLogs = mergedMath;
+                    appData.officialScores = mergedOfficial;
+                    appData.simulations = mergedSimulations;
                     if (cloudData.examDate) appData.examDate = cloudData.examDate;
                     appData.lastUpdated = Math.max(appData.lastUpdated || 0, cloudData.lastUpdated || 0, Date.now());
 
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+                    localStorage.setItem(getActiveStorageKey(), JSON.stringify(appData));
                     renderApp();
 
                     if (hadChanges && !isSyncingToCloud) {
                         showToast('עודכן וסונכרן אוטומטית עם המכשיר השני ☁️✨', 'info');
                     }
                 } else {
-                    // Seed initial cloud document if not exists
-                    db.collection('users').doc(CLOUD_DOC_ID).set(appData, { merge: true }).catch(()=>{});
+                    db.collection('users').doc(targetUser).set(appData, { merge: true }).catch(()=>{});
                 }
-                setSyncStatus('synced');
-                const badge = document.getElementById('dash-cloud-badge');
-                if (badge) badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> מחובר ומסונכרן';
             }, err => {
                 console.warn('Live sync snapshot error:', err);
                 setSyncStatus('offline');
-                const badge = document.getElementById('dash-cloud-badge');
-                if (badge) badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> לא מקוון';
             });
         }
 
         function forceCloudSync(showToastFlag = true) {
+            const targetUser = activeUser || LEGACY_CLOUD_DOC_ID;
             if (!db) {
                 showToast('Firebase אינו מחובר כרגע (פועל במצב מקומי)', 'warning');
                 return;
             }
             setSyncStatus('syncing');
             const t0 = performance.now();
-            db.collection('users').doc(CLOUD_DOC_ID).set(appData, { merge: true })
+            db.collection('users').doc(targetUser).set(appData, { merge: true })
                 .then(() => {
                     const lat = Math.round(performance.now() - t0);
                     lastSyncTimestamp = Date.now();
@@ -1869,9 +2193,124 @@
                 .catch(err => {
                     setSyncStatus('offline');
                     if (showToastFlag) {
-                        showToast(`שגיאת סנכרון: ${err.message}`, 'warning');
+                        showToast('שגיאה בסנכרון לענן: ' + err.message, 'warning');
                     }
                 });
+        }
+
+        // -------------------------------------------------------------
+        // ADMIN / GOD MODE ENGINE
+        // -------------------------------------------------------------
+        async function loadAdminDashboard() {
+            if (!db) return;
+            const tableBody = document.getElementById('admin-users-table-body');
+            const usersCountEl = document.getElementById('admin-users-count');
+
+            if (tableBody) {
+                tableBody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-stone-400">טוען משתמשים בזמן אמת... ⏳</td></tr>';
+            }
+
+            try {
+                const snapshot = await db.collection('users').get();
+                let totalUsers = 0;
+                let totalSections = 0;
+                let totalEssays = 0;
+                let totalSimulations = 0;
+                const rows = [];
+
+                snapshot.forEach(doc => {
+                    totalUsers++;
+                    const data = doc.data() || {};
+                    const username = doc.id;
+                    const sections = Array.isArray(data.sections) ? data.sections.length : 0;
+                    const essays = Array.isArray(data.essays) ? data.essays.length : 0;
+                    const mathLogs = Array.isArray(data.mentalMathLogs) ? data.mentalMathLogs.length : 0;
+                    const simulations = Array.isArray(data.simulations) ? data.simulations.length : 0;
+
+                    totalSections += sections;
+                    totalEssays += essays;
+                    totalSimulations += simulations;
+
+                    // Compute Peak score
+                    let peak = 0;
+                    if (Array.isArray(data.officialScores)) {
+                        data.officialScores.forEach(s => { peak = Math.max(peak, s.totalScore || 0); });
+                    }
+                    if (Array.isArray(data.simulations)) {
+                        data.simulations.forEach(s => { peak = Math.max(peak, s.score || 0); });
+                    }
+
+                    const lastUpdated = data.lastUpdated || data.createdAt;
+                    const dateStr = lastUpdated ? new Date(lastUpdated).toLocaleDateString('he-IL', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'}) : 'לא ידוע';
+
+                    rows.push(`
+                        <tr class="hover:bg-stone-900/60 transition-colors">
+                            <td class="p-3.5 font-bold text-white flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-full bg-pink-500/20 text-pink-300 flex items-center justify-center text-xs">🌸</span>
+                                <span>${username}</span>
+                                ${username === 'shelly' ? '<span class="px-1.5 py-0.2 rounded bg-pink-500/20 text-pink-300 text-[10px]">ראשי</span>' : ''}
+                            </td>
+                            <td class="p-3.5 text-blue-300 font-bold">${sections}</td>
+                            <td class="p-3.5 text-amber-300 font-bold">${essays}</td>
+                            <td class="p-3.5 text-purple-300 font-bold">${mathLogs}</td>
+                            <td class="p-3.5 text-emerald-300 font-bold">${simulations}</td>
+                            <td class="p-3.5 font-black text-yellow-400">${peak > 0 ? `${peak} ⭐` : '-'}</td>
+                            <td class="p-3.5 text-stone-400 font-mono text-[11px]">${dateStr}</td>
+                            <td class="p-3.5 text-center">
+                                <div class="flex items-center justify-center gap-2">
+                                    <button onclick="adminImpersonateUser('${username}')" class="px-2.5 py-1 bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 rounded-lg text-xs font-bold transition-all active:scale-95" title="צפייה בממשק כמשתמש זה">
+                                        👁️ צפייה
+                                    </button>
+                                    <button onclick="adminDeleteUser('${username}')" class="px-2.5 py-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 rounded-lg text-xs font-bold transition-all active:scale-95" title="מחיקת נתוני משתמש">
+                                        🗑️
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
+                });
+
+                document.getElementById('admin-stat-users').innerText = totalUsers;
+                document.getElementById('admin-stat-sections').innerText = totalSections;
+                document.getElementById('admin-stat-essays').innerText = totalEssays;
+                document.getElementById('admin-stat-simulations').innerText = totalSimulations;
+                if (usersCountEl) usersCountEl.innerText = `${totalUsers} משתמשים`;
+
+                if (tableBody) {
+                    tableBody.innerHTML = rows.length > 0 ? rows.join('') : '<tr><td colspan="8" class="p-8 text-center text-stone-500">לא נמצאו משתמשים רשומים</td></tr>';
+                }
+            } catch(e) {
+                console.warn('Admin load error:', e);
+                if (tableBody) tableBody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-rose-400">שגיאה בטעינת משתמשים: ${e.message}</td></tr>`;
+            }
+        }
+
+        async function adminImpersonateUser(username) {
+            adminImpersonating = true;
+            isAdminLoggedIn = false;
+            document.getElementById('view-admin').classList.add('hidden');
+            loginAsUser(username);
+            showToast(`מציג כעת את המערכת של ${username} (מצב צפיית מנהל) 👁️`, 'info');
+        }
+
+        async function adminDeleteUser(username) {
+            if (!confirm(`האם את בטוחה שברצונך למחוק את כל הנתונים של המשתמש "${username}" מ-Firestore? פעולה זו אינה ניתנת לביטול!`)) {
+                return;
+            }
+            try {
+                await db.collection('users').doc(username).delete();
+                showToast(`המשתמש ${username} נמחק בהצלחה.`, 'info');
+                loadAdminDashboard();
+            } catch(e) {
+                showToast('שגיאה במחיקת משתמש: ' + e.message, 'warning');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            document.getElementById('view-admin').classList.add('hidden');
+            document.getElementById('view-login').classList.remove('hidden');
+            showToast('יצאת ממצב ניהול 👋', 'info');
         }
 
         // -------------------------------------------------------------
@@ -3852,11 +4291,26 @@
 
 
         window.addEventListener('DOMContentLoaded', () => {
-            renderApp();
-            setupLiveCloudListener();
+            if (activeUser) {
+                // User is already logged in
+                const cached = localStorage.getItem(getActiveStorageKey()) || localStorage.getItem(LEGACY_STORAGE_KEY);
+                if (cached) {
+                    try { appData = JSON.parse(cached); } catch(e){}
+                }
+                updateUserInterface();
+                document.getElementById('view-login').classList.add('hidden');
+                document.getElementById('app-root').classList.remove('hidden');
+                renderApp();
+                setupLiveCloudListener(activeUser);
+            } else {
+                // Show login screen
+                document.getElementById('view-login').classList.remove('hidden');
+                document.getElementById('app-root').classList.add('hidden');
+            }
+
             startBackgroundWatchdog();
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./sw.js?v=20261024_psychostreak_pink').catch(() => {});
+                navigator.serviceWorker.register('./sw.js?v=20261025_psychostreak_auth').catch(() => {});
             }
         });
     </script>
