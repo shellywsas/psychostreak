@@ -61,7 +61,7 @@ def run_tests():
     # -------------------------------------------------------------
     # 2. Live Firebase Firestore API Check
     # -------------------------------------------------------------
-    firestore_url = "https://firestore.googleapis.com/v1/projects/loos-77484/databases/(default)/documents/users/shelly_psychostreak"
+    firestore_url = "https://firestore.googleapis.com/v1/projects/psychostreak-cd83e/databases/(default)/documents/users/shelly_psychostreak"
     t0 = time.time()
     try:
         req = urllib.request.Request(firestore_url, headers={"User-Agent": "PsychoStreak-TestBot"})

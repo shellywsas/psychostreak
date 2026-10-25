@@ -2,12 +2,12 @@
  * StudyStreak Pro - Firebase Configuration & Offline Safe-Init
  */
 const firebaseConfig = {
-    apiKey: "AIzaSyBMfjLTktAFc5uFRN8Oda8-_u29KykDAYA",
-    authDomain: "loos-77484.firebaseapp.com",
-    projectId: "loos-77484",
-    storageBucket: "loos-77484.firebasestorage.app",
-    messagingSenderId: "944527580287",
-    appId: "1:944527580287:web:3c6ccacac1a0a8121a334a"
+    apiKey: "AIzaSyBPboUtv6RREpZa0ZSKiqJTzQbz8OPH4kc",
+    authDomain: "psychostreak-cd83e.firebaseapp.com",
+    projectId: "psychostreak-cd83e",
+    storageBucket: "psychostreak-cd83e.firebasestorage.app",
+    messagingSenderId: "338480800113",
+    appId: "1:338480800113:web:3c6ccacac1a0a8121a334a"
 };
 
 let db = null;
