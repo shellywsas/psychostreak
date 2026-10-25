@@ -8,9 +8,12 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>PsychoStreak - ניהול למידה חכם לפסיכומטרי 🎯</title>
 
-    <!-- Favicon & Touch Icon -->
+    <!-- Favicon, Manifest & App Icons -->
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
-    <link rel="apple-touch-icon" href="./icons/icon-192.png">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+    <link rel="manifest" href="./manifest.json">
 
     <!-- Fonts: Rubik for clean Hebrew StudyStreak typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -101,9 +104,7 @@
             <!-- Logo & Brand Header -->
             <div class="flex items-center justify-between mb-6">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-pink-100 to-rose-100 rounded-2xl flex items-center justify-center text-xl shadow-xs">
-                        🎯
-                    </div>
+                    <img src="./icons/icon-192.png" alt="PsychoStreak Logo" class="w-11 h-11 rounded-2xl shadow-xs object-cover border border-pink-200/50">
                     <div>
                         <h1 class="text-lg font-bold text-stone-900 leading-tight tracking-tight">PsychoStreak</h1>
                         <div class="flex items-center gap-1.5 mt-0.5">
@@ -168,29 +169,35 @@
                 <button onclick="openExamDateModal()" class="w-full py-2.5 text-xs text-stone-500 hover:text-pink-600 font-semibold bg-stone-50 hover:bg-pink-50 rounded-2xl transition-colors flex items-center justify-center gap-1.5 active:scale-95">
                     <span>⏳</span> הגדרת מועד בחינה
                 </button>
+                <button onclick="openFirebaseConfigModal()" class="w-full py-2.5 text-xs text-stone-600 hover:text-pink-700 font-bold bg-pink-50/60 hover:bg-pink-100/70 border border-pink-200/60 rounded-2xl transition-all flex items-center justify-center gap-1.5 active:scale-95">
+                    <span>⚡</span> פיירבייס עצמאי (הגדרות ענן)
+                </button>
             </div>
         </aside>
 
         <!-- ============================================================= -->
         <!-- MOBILE HEADER -->
         <!-- ============================================================= -->
-        <header class="md:hidden flex justify-between items-center bg-white/90 backdrop-blur-md p-4 sticky top-0 z-40 border-b border-stone-100 pt-safe-top">
+        <header class="md:hidden flex justify-between items-center bg-white/95 backdrop-blur-md px-4 py-3 sticky top-0 z-40 border-b border-pink-100/60 pt-safe-top shadow-2xs">
             <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 bg-gradient-to-br from-pink-100 to-rose-100 rounded-xl flex items-center justify-center text-base shadow-xs">🎯</div>
+                <img src="./icons/icon-192.png" alt="PsychoStreak" class="w-9 h-9 rounded-2xl shadow-xs object-cover border border-pink-200/60">
                 <div>
-                    <div class="font-bold text-base text-stone-900 tracking-tight">PsychoStreak</div>
-                    <div class="flex items-center gap-1.5">
+                    <div class="font-bold text-base text-stone-900 tracking-tight leading-tight">PsychoStreak</div>
+                    <div class="flex items-center gap-1.5 mt-0.5">
                         <span class="text-[10px] text-pink-600 font-bold">פסיכומטרי</span>
                         <span id="mobile-sync-badge" class="w-2 h-2 rounded-full bg-emerald-500" title="מסונכרן בענן"></span>
                     </div>
                 </div>
             </div>
-            <div class="flex gap-2 items-center">
-                <button onclick="openExamDateModal()" class="bg-pink-50 text-pink-700 border border-pink-200/70 px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 active:scale-95">
+            <div class="flex gap-1.5 items-center">
+                <button onclick="openExamDateModal()" class="bg-pink-50 hover:bg-pink-100 text-pink-700 border border-pink-200/70 px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 active:scale-95">
                     <span>⏳</span> <span id="mobile-countdown-text">מועד</span>
                 </button>
-                <button onclick="switchTab('analytics')" class="bg-gradient-to-r from-pink-50 to-rose-50 text-pink-700 border border-pink-200/70 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 active:scale-95 shadow-2xs">
+                <button onclick="switchTab('analytics')" class="bg-gradient-to-r from-pink-50 to-rose-50 text-pink-700 border border-pink-200/70 px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 active:scale-95 shadow-2xs">
                     <span>🔥</span> <span id="mobile-streak-num">0</span>
+                </button>
+                <button onclick="openQuickActionModal()" class="w-8 h-8 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-black text-lg flex items-center justify-center shadow-sm active:scale-90" title="הזנה מהירה (+)">
+                    +
                 </button>
             </div>
         </header>
@@ -224,7 +231,12 @@
         <!-- ============================================================= -->
         <!-- MAIN CONTENT AREA -->
         <!-- ============================================================= -->
-        <main class="flex-1 w-full max-w-5xl mx-auto p-4 md:p-6 lg:p-8 relative z-10 space-y-6">
+        <main class="flex-1 w-full max-w-5xl mx-auto p-4 md:p-6 lg:p-8 relative z-10 space-y-6 pb-28 md:pb-8">
+
+            <!-- ========================================================= -->
+            <!-- TAB 1: DASHBOARD (Includes Hero Banner & Overview Metrics) -->
+            <!-- ========================================================= -->
+            <div id="tab-dashboard" class="tab-content space-y-6 animate-fadeIn">
 
             <!-- Hero Countdown Banner -->
             <div class="bg-gradient-to-br from-pink-500 via-rose-500 to-pink-600 text-white rounded-3xl p-6 md:p-7 shadow-xl shadow-pink-500/15 relative overflow-hidden">
@@ -317,10 +329,7 @@
                 </div>
             </section>
 
-            <!-- ========================================================= -->
-            <!-- TAB 1: DASHBOARD -->
-            <!-- ========================================================= -->
-            <div id="tab-dashboard" class="tab-content space-y-6 animate-fadeIn">
+
 
                 <!-- Real-Time Cloud & Diagnostics Bar (Prominent Status) -->
                 <div class="bg-gradient-to-r from-stone-900 via-stone-800 to-stone-900 text-white p-4 md:p-5 rounded-3xl shadow-md border border-stone-700/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 relative overflow-hidden">
@@ -335,18 +344,21 @@
                                 </span>
                             </div>
                             <div class="text-[11px] text-stone-300 mt-0.5 flex items-center gap-2">
-                                <span>מסד נתונים: <code class="bg-black/30 px-1.5 py-0.2 rounded text-pink-200">loos-77484</code></span>
+                                <span>מסד נתונים: <code id="dash-firebase-project-id" class="bg-black/30 px-1.5 py-0.2 rounded text-pink-200">טוען...</code></span>
                                 <span>•</span>
                                 <span id="dash-last-synced-time">סונכרן כעת 🟢</span>
                             </div>
                         </div>
                     </div>
-                    <div class="relative z-10 flex items-center gap-2 w-full sm:w-auto">
-                        <button onclick="forceCloudSync(true)" class="flex-1 sm:flex-none px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center justify-center gap-1.5 border border-white/10">
+                    <div class="relative z-10 flex items-center gap-2 w-full sm:w-auto flex-wrap">
+                        <button onclick="forceCloudSync(true)" class="flex-1 sm:flex-none px-3 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center justify-center gap-1.5 border border-white/10">
                             <span>🔄</span> בדיקת סנכרון
                         </button>
-                        <button onclick="openDiagnosticsModal()" class="flex-1 sm:flex-none px-3.5 py-2 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center justify-center gap-1.5 shadow-sm">
-                            <span>🩺</span> בודק תקלות
+                        <button onclick="openFirebaseConfigModal()" class="flex-1 sm:flex-none px-3 py-2 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center justify-center gap-1.5 shadow-sm">
+                            <span>⚡</span> פיירבייס עצמאי
+                        </button>
+                        <button onclick="openDiagnosticsModal()" class="flex-1 sm:flex-none px-3 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center justify-center gap-1.5 border border-white/10">
+                            <span>🩺</span> בדיקות
                         </button>
                     </div>
                 </div>
@@ -1107,8 +1119,7 @@
                             <button type="button" onclick="setScorePreset(20)" class="preset-pill px-2 py-0.5 rounded-lg bg-pink-100 hover:bg-pink-200 text-pink-800 text-xs font-black">20 ⭐</button>
                         </div>
                     </div>
-                    <div style="display:none"><div id="old-input-placeholder"</div></div>
-                    <div id="section-calc-result" class="hidden mt-1.5 text-xs font-bold text-pink-600 text-center"></div>
+                                        <div id="section-calc-result" class="hidden mt-1.5 text-xs font-bold text-pink-600 text-center"></div>
                 </div>
 
                 <!-- Mistake Analysis Area -->
@@ -1191,7 +1202,85 @@
     </div>
 
     <!-- Modal: Configure Exam Date -->
-    <div id="modal-exam-date" class="hidden fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-[80] flex items-end md:items-center justify-center p-0 md:p-4">
+        <!-- Modal: Dedicated Firebase Configuration -->
+    <div id="modal-firebase-config" class="hidden fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-[85] flex items-end md:items-center justify-center p-0 md:p-4">
+        <div class="bg-white rounded-t-[32px] md:rounded-[32px] w-full max-w-lg p-6 md:p-8 shadow-2xl animate-popIn max-h-[90vh] overflow-y-auto custom-scrollbar pb-safe-bottom">
+            <div class="flex justify-between items-center mb-5">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-2xl bg-pink-100 text-pink-700 flex items-center justify-center text-xl">
+                        ⚡
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg md:text-xl text-stone-900 leading-tight">חיבור לפרויקט Firebase משלו</h3>
+                        <p class="text-xs text-stone-500">הפרדה מוחלטת מ-StudyStreak לענן עצמאי</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-firebase-config')" class="text-stone-400 hover:text-stone-600 bg-stone-100 p-2 rounded-full">✕</button>
+            </div>
+
+            <!-- Current Project Status Card -->
+            <div class="p-4 rounded-2xl bg-gradient-to-r from-pink-50/80 to-rose-50/80 border border-pink-200/80 mb-5 space-y-2">
+                <div class="flex items-center justify-between text-xs">
+                    <span class="font-bold text-stone-600">פרויקט פעיל כרגע:</span>
+                    <span id="cfg-modal-status-badge" class="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200">
+                        ברירת מחדל
+                    </span>
+                </div>
+                <div class="font-mono text-sm font-black text-pink-900 bg-white/80 p-2.5 rounded-xl border border-pink-100 flex items-center justify-between">
+                    <span id="cfg-modal-project-id">loos-77484</span>
+                    <span id="cfg-modal-collection" class="text-[11px] font-sans font-bold text-stone-500">users/shelly_psychostreak</span>
+                </div>
+            </div>
+
+            <!-- 3-Step Setup Instructions -->
+            <div class="space-y-2.5 mb-5 text-xs text-stone-700 bg-stone-50 p-4 rounded-2xl border border-stone-200/80">
+                <div class="font-bold text-stone-900 text-sm flex items-center gap-1.5 mb-1 text-pink-700">
+                    <span>📋</span> 3 צעדים פשוטים להקמת הפרויקט:
+                </div>
+                <div class="flex items-start gap-2">
+                    <span class="w-5 h-5 rounded-full bg-pink-200 text-pink-800 flex items-center justify-center font-bold text-[11px] shrink-0 mt-0.5">1</span>
+                    <div>נכנסים ל-<a href="https://console.firebase.google.com" target="_blank" class="text-pink-600 font-bold underline">Firebase Console</a> ויוצרים פרויקט חדש (למשל: <code class="font-mono bg-stone-200 px-1 rounded">psychostreak</code>).</div>
+                </div>
+                <div class="flex items-start gap-2">
+                    <span class="w-5 h-5 rounded-full bg-pink-200 text-pink-800 flex items-center justify-center font-bold text-[11px] shrink-0 mt-0.5">2</span>
+                    <div>בתפריט שמאל נכנסים ל-<strong>Firestore Database</strong> -> יוצרים בסיס נתונים במצב <strong>Test mode</strong>.</div>
+                </div>
+                <div class="flex items-start gap-2">
+                    <span class="w-5 h-5 rounded-full bg-pink-200 text-pink-800 flex items-center justify-center font-bold text-[11px] shrink-0 mt-0.5">3</span>
+                    <div>בהגדרות הפרויקט (⚙️) מוסיפים אפליקציית Web (<code>&lt;/&gt;</code>) ומעתיקים את בלוק ה-<code>const firebaseConfig = { ... }</code> לתיבה למטה.</div>
+                </div>
+            </div>
+
+            <!-- Paste Config Box -->
+            <div class="space-y-3 mb-5">
+                <label class="text-xs font-bold text-stone-700 block">
+                    הדביקי כאן את ה-Config (או JSON / Javascript) של הפרויקט החדש:
+                </label>
+                <textarea id="custom-firebase-input" rows="6" placeholder="const firebaseConfig = {&#10;  apiKey: &quot;AIzaSy...&quot;,&#10;  authDomain: &quot;psychostreak-xxxx.firebaseapp.com&quot;,&#10;  projectId: &quot;psychostreak-xxxx&quot;,&#10;  ...&#10;};" class="w-full p-3 font-mono text-xs bg-stone-50 border border-stone-200 rounded-2xl outline-none focus:border-pink-500 focus:bg-white transition-all"></textarea>
+                <div id="cfg-error-msg" class="hidden text-xs font-bold text-rose-600 p-2.5 rounded-xl bg-rose-50 border border-rose-200"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-2">
+                <button type="button" onclick="saveCustomFirebaseConfig()" class="w-full py-3.5 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white rounded-2xl font-bold text-sm shadow-md shadow-pink-500/20 active:scale-95 transition-all flex items-center justify-center gap-2">
+                    <span>✨</span> שמור ובדוק חיבור לפרויקט החדש
+                </button>
+                <button type="button" onclick="migrateDataToNewFirebase()" class="w-full py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-2xl font-bold text-xs active:scale-95 transition-all flex items-center justify-center gap-1.5">
+                    <span>📤</span> העבר את כל הנתונים הנוכחיים לפרויקט החדש
+                </button>
+                <div class="flex items-center justify-between pt-2">
+                    <button type="button" onclick="resetFirebaseConfig()" class="text-xs text-stone-500 hover:text-stone-700 font-bold underline">
+                        שחזר לפרויקט ברירת מחדל
+                    </button>
+                    <button type="button" onclick="closeModal('modal-firebase-config')" class="text-xs text-stone-500 hover:text-stone-700 font-bold bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-xl">
+                        סגור
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div id="modal-exam-date" class="hidden fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-[80] flex items-end md:items-center justify-center p-0 md:p-4">
         <div class="bg-white rounded-t-[32px] md:rounded-[32px] w-full max-w-sm p-6 shadow-2xl animate-popIn pb-safe-bottom">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="font-bold text-lg text-stone-900 flex items-center gap-2">
@@ -1264,9 +1353,9 @@
         }
 
         // -------------------------------------------------------------
-        // Firebase Cloud Sync Configuration
+        // Firebase Cloud Sync Configuration (Supports Dedicated Project)
         // -------------------------------------------------------------
-        const firebaseConfig = {
+        const defaultFirebaseConfig = {
             apiKey: "AIzaSyBMfjLTktAFc5uFRN8Oda8-_u29KykDAYA",
             authDomain: "loos-77484.firebaseapp.com",
             projectId: "loos-77484",
@@ -1275,6 +1364,20 @@
             appId: "1:944527580287:web:3c6ccacac1a0a8121a334a"
         };
 
+        function getActiveFirebaseConfig() {
+            try {
+                const custom = localStorage.getItem('psychostreak_custom_firebase');
+                if (custom) {
+                    const parsed = JSON.parse(custom);
+                    if (parsed && parsed.projectId && parsed.apiKey) {
+                        return { config: parsed, isCustom: true };
+                    }
+                }
+            } catch(e) {}
+            return { config: defaultFirebaseConfig, isCustom: false };
+        }
+
+        let { config: firebaseConfig, isCustom: isCustomFirebase } = getActiveFirebaseConfig();
         let db = null;
         let isSyncingToCloud = false;
 
@@ -2007,8 +2110,132 @@
             }
         }
 
+        // =============================================================
+        // DEDICATED FIREBASE CONFIGURATION LOGIC
+        // =============================================================
+        function openFirebaseConfigModal() {
+            const active = getActiveFirebaseConfig();
+            const elProj = document.getElementById('cfg-modal-project-id');
+            const elBadge = document.getElementById('cfg-modal-status-badge');
+            const elInput = document.getElementById('custom-firebase-input');
+            const elErr = document.getElementById('cfg-error-msg');
+
+            if (elProj) elProj.innerText = active.config.projectId || 'לא הוגדר';
+            if (elBadge) {
+                if (active.isCustom) {
+                    elBadge.className = 'px-2 py-0.5 rounded-full text-[10px] font-black bg-pink-100 text-pink-800 border border-pink-200';
+                    elBadge.innerText = 'פרויקט ייעודי פעיל ✨';
+                } else {
+                    elBadge.className = 'px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200';
+                    elBadge.innerText = 'פרויקט ברירת מחדל';
+                }
+            }
+            if (elInput && active.isCustom) {
+                elInput.value = JSON.stringify(active.config, null, 2);
+            }
+            if (elErr) elErr.classList.add('hidden');
+            openModal('modal-firebase-config');
+        }
+
+        function parseFirebaseInput(raw) {
+            raw = (raw || '').trim();
+            if (!raw) throw new Error('נא להדביק את ה-config של Firebase');
+
+            // Case 1: Standard JSON
+            try {
+                const parsed = JSON.parse(raw);
+                if (parsed.projectId && parsed.apiKey) return parsed;
+            } catch(e) {}
+
+            // Case 2: Javascript snippet (e.g. const firebaseConfig = { ... };)
+            const extract = (key) => {
+                const reg = new RegExp("['\"]?" + key + "['\"]?\\s*:\\s*['\"]([^\'\"]+)['\"]", "i");
+                const m = raw.match(reg);
+                return m ? m[1] : '';
+            };
+
+            const config = {
+                apiKey: extract('apiKey'),
+                authDomain: extract('authDomain'),
+                projectId: extract('projectId'),
+                storageBucket: extract('storageBucket'),
+                messagingSenderId: extract('messagingSenderId'),
+                appId: extract('appId')
+            };
+
+            if (!config.projectId || !config.apiKey) {
+                throw new Error('לא זוהו פרטי projectId או apiKey תקינים בטקסט שהודבק.');
+            }
+            return config;
+        }
+
+        async function saveCustomFirebaseConfig() {
+            const elInput = document.getElementById('custom-firebase-input');
+            const elErr = document.getElementById('cfg-error-msg');
+            elErr.classList.add('hidden');
+
+            try {
+                const newConfig = parseFirebaseInput(elInput.value);
+
+                // Live Connection Test using isolated temporary app instance
+                showToast('בודק חיבור לפרויקט החדש... ⏳', 'info');
+                const testAppName = 'test_init_' + Date.now();
+                const testApp = firebase.initializeApp(newConfig, testAppName);
+                const testDb = testApp.firestore();
+                testDb.settings({ ignoreUndefinedProperties: true });
+
+                // Test read/write ping
+                const pingRef = testDb.collection('users').doc(CLOUD_DOC_ID);
+                await pingRef.set({
+                    pingTest: Date.now(),
+                    appName: 'PsychoStreak',
+                    updatedAt: new Date().toISOString()
+                }, { merge: true });
+
+                // Success! Save to localStorage
+                localStorage.setItem('psychostreak_custom_firebase', JSON.stringify(newConfig));
+                showToast('החיבור לפרויקט החדש הצליח ואושר! 🎉 מסנכרן נתונים...', 'success');
+
+                // Delete test app and reload page cleanly to apply new master db
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1200);
+
+            } catch(err) {
+                elErr.innerText = 'שגיאת חיבור לפרויקט: ' + (err.message || err);
+                elErr.classList.remove('hidden');
+                showToast('שגיאה בבדיקת הפרויקט החדש', 'warning');
+            }
+        }
+
+        async function migrateDataToNewFirebase() {
+            try {
+                if (!db) throw new Error('מסד הנתונים אינו פעיל');
+                showToast('מעביר את כל הנתונים, החיבורים והפרקים... ⏳', 'info');
+                await db.collection('users').doc(CLOUD_DOC_ID).set(appData, { merge: true });
+                showToast('כל הנתונים הועברו וסונכרנו בהצלחה! 🚀✨', 'success');
+            } catch(e) {
+                showToast('שגיאה בהעברת הנתונים: ' + e.message, 'warning');
+            }
+        }
+
+        function resetFirebaseConfig() {
+            if (!confirm('האם לחזור לפרויקט ברירת המחדל (loos-77484)?')) return;
+            localStorage.removeItem('psychostreak_custom_firebase');
+            showToast('שוחזר לפרויקט ברירת המחדל! מרענן...', 'info');
+            setTimeout(() => {
+                window.location.reload();
+            }, 800);
+        }
+
+        function openModal(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('hidden');
+        }
+
         function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
         }
 
         function exportData() {
@@ -2056,6 +2283,11 @@
             const masterStreak = calcMasterStreak();
             document.getElementById('sidebar-streak-num').innerText = masterStreak;
             document.getElementById('mobile-streak-num').innerText = masterStreak;
+
+            const projEl = document.getElementById('dash-firebase-project-id');
+            if (projEl) {
+                projEl.innerText = firebaseConfig.projectId + (isCustomFirebase ? ' (עצמאי ✨)' : '');
+            }
             document.getElementById('metric-streak').innerText = masterStreak;
 
             // 3. Countdown
@@ -2894,7 +3126,7 @@
 
             // Test 5: Timers Engine
             try {
-                updateItem('timers', true, 'טיימר 20 דק' (פרקים), 30 דק' (חיבור) ו-15 דק' (חישוב) מסונכרנים ומוכנים');
+                updateItem('timers', true, "טיימר 20 דק' (פרקים), 30 דק' (חיבור) ו-15 דק' (חישוב) מסונכרנים ומוכנים");
             } catch(err) {
                 updateItem('timers', false, err.message);
             }
@@ -2967,8 +3199,8 @@
         });
     </script>
 
-    <!-- Floating Action Button (FAB) for instant logging from any screen -->
-    <div class="fixed bottom-20 md:bottom-8 left-6 z-40 flex flex-col items-center gap-2">
+    <!-- Floating Action Button (FAB) for desktop (mobile has quick + in header) -->
+    <div class="hidden md:flex fixed bottom-8 left-6 z-40 flex-col items-center gap-2">
         <button onclick="openQuickActionModal()" class="w-14 h-14 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white shadow-xl shadow-pink-500/30 flex items-center justify-center text-3xl font-black transition-all hover:scale-105 active:scale-95" title="פעולה מהירה (הזנת פרק, חיבור או חישוב)">
             +
         </button>

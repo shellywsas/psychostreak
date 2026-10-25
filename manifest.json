@@ -1,17 +1,17 @@
 {
-  "name": "StudyStreak Pro",
-  "short_name": "StudyStreak",
+  "name": "PsychoStreak - ניהול למידה חכם לפסיכומטרי",
+  "short_name": "PsychoStreak",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#fafaf9",
-  "theme_color": "#fafaf9",
-  "description": "ניהול למידה חכם לבגרויות עם תזכורות אוטומטיות",
+  "background_color": "#fafafa",
+  "theme_color": "#fdf2f8",
+  "description": "אפליקציית ניהול למידה חכמה לפסיכומטרי - מעקב חיבורים, פרקים בזמן, תחקור טעויות וחישוב כמותי מהיר.",
   "icons": [
     {
       "src": "./icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "./icons/icon-512.png",
