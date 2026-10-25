@@ -1,23 +1,40 @@
 {
+  "id": "psychostreak-pwa-v3",
   "name": "PsychoStreak - ניהול למידה חכם לפסיכומטרי",
   "short_name": "PsychoStreak",
-  "start_url": "./index.html",
+  "start_url": "https://shellywsas.github.io/psychostreak/index.html?pwa=1",
+  "scope": "https://shellywsas.github.io/psychostreak/",
   "display": "standalone",
+  "orientation": "portrait",
+  "lang": "he",
+  "dir": "rtl",
   "background_color": "#fafafa",
   "theme_color": "#fdf2f8",
   "description": "אפליקציית ניהול למידה חכמה לפסיכומטרי - מעקב חיבורים, פרקים בזמן, תחקור טעויות וחישוב כמותי מהיר.",
   "icons": [
     {
-      "src": "./icons/icon-192.png",
+      "src": "https://shellywsas.github.io/psychostreak/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "./icons/icon-512.png",
+      "src": "https://shellywsas.github.io/psychostreak/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "https://shellywsas.github.io/psychostreak/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "https://shellywsas.github.io/psychostreak/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#fdf2f8">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>PsychoStreak - ניהול למידה חכם לפסיכומטרי 🎯</title>
@@ -13,7 +14,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
     <link rel="apple-touch-icon" href="./apple-touch-icon.png">
-    <link rel="manifest" href="manifest.json?v=20261025_2">
+    <link rel="manifest" href="manifest.json?v=20261025_3">
 
     <!-- Fonts: Rubik for clean Hebrew StudyStreak typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1806,8 +1807,10 @@
                 const custom = localStorage.getItem('psychostreak_custom_firebase');
                 if (custom) {
                     const parsed = JSON.parse(custom);
-                    if (parsed && parsed.projectId && parsed.apiKey) {
+                    if (parsed && parsed.projectId && parsed.apiKey && parsed.projectId !== 'loos-77484') {
                         return { config: parsed, isCustom: true };
+                    } else {
+                        localStorage.removeItem('psychostreak_custom_firebase');
                     }
                 }
             } catch(e) {}
@@ -1859,9 +1862,15 @@
         // Multi-Device User Authentication & Cloud Realtime Sync Engine
         // -------------------------------------------------------------
         const USER_STORAGE_KEY = 'psychostreak_active_user';
-        const STORAGE_KEY_PREFIX = 'psychostreak_data_';
+        const STORAGE_KEY_PREFIX = 'psychostreak_data_user_';
         const LEGACY_STORAGE_KEY = 'psychoStreak_data_v1';
         const LEGACY_CLOUD_DOC_ID = 'shelly_psychostreak';
+
+        // Remove legacy shared local cache so new users NEVER inherit someone else's data
+        try {
+            localStorage.removeItem(LEGACY_STORAGE_KEY);
+            localStorage.removeItem('psychostreak_data_default');
+        } catch(e) {}
 
         let activeUser = localStorage.getItem(USER_STORAGE_KEY) || null;
         let isAdminLoggedIn = false;
@@ -1869,38 +1878,51 @@
         let liveSyncUnsubscribe = null;
         let lastSyncTimestamp = Date.now();
 
-        function getActiveStorageKey() {
-            return STORAGE_KEY_PREFIX + (activeUser || 'default');
+        function getEmptyAppData() {
+            return {
+                examDate: '2026-12-25',
+                essays: [],
+                mentalMathLogs: [],
+                sections: [],
+                officialScores: [],
+                simulations: [],
+                lastUpdated: 0
+            };
         }
 
-        function loadData() {
-            let data = null;
+        function getActiveStorageKey(user = activeUser) {
+            return STORAGE_KEY_PREFIX + (user || 'guest');
+        }
+
+        function sanitizeUserData(raw) {
+            const base = getEmptyAppData();
+            if (!raw || typeof raw !== 'object') return base;
+            return {
+                examDate: raw.examDate || '2026-12-25',
+                essays: Array.isArray(raw.essays) ? raw.essays.filter(e => e && e.topic !== 'יי') : [],
+                mentalMathLogs: Array.isArray(raw.mentalMathLogs) ? raw.mentalMathLogs : [],
+                sections: Array.isArray(raw.sections) ? raw.sections : [],
+                officialScores: Array.isArray(raw.officialScores) ? raw.officialScores : [],
+                simulations: Array.isArray(raw.simulations) ? raw.simulations : [],
+                lastUpdated: raw.lastUpdated || 0,
+                password: raw.password,
+                username: raw.username,
+                createdAt: raw.createdAt
+            };
+        }
+
+        function loadData(forUser = activeUser) {
+            if (!forUser) return getEmptyAppData();
             try {
-                const key = getActiveStorageKey();
-                const saved = localStorage.getItem(key) || localStorage.getItem(LEGACY_STORAGE_KEY);
-                if (saved) data = JSON.parse(saved);
+                const saved = localStorage.getItem(getActiveStorageKey(forUser));
+                if (saved) {
+                    return sanitizeUserData(JSON.parse(saved));
+                }
             } catch(e) {}
-
-            if (!data || typeof data !== 'object') {
-                data = {
-                    examDate: '2026-12-25',
-                    essays: [],
-                    mentalMathLogs: [],
-                    sections: [],
-                    officialScores: [],
-                    simulations: [],
-                    lastUpdated: 0
-                };
-            }
-            if (!Array.isArray(data.essays)) data.essays = [];
-            if (!Array.isArray(data.sections)) data.sections = [];
-            if (!Array.isArray(data.mentalMathLogs)) data.mentalMathLogs = [];
-            if (!Array.isArray(data.officialScores)) data.officialScores = [];
-            if (!Array.isArray(data.simulations)) data.simulations = [];
-            return data;
+            return getEmptyAppData();
         }
 
-        let appData = loadData();
+        let appData = loadData(activeUser);
 
         function updateUserInterface() {
             const displayName = activeUser ? (activeUser === 'shelly' ? 'שלי' : activeUser) : 'משתמשת';
@@ -1982,38 +2004,28 @@
                         loginAsUser(cleanUser, cloudData);
                         showToast(`איזה כיף שחזרת, ${username}! ✨`, 'success');
                     } else {
-                        // Create new user in Firestore
-                        let initialData = { ...appData, password: password, createdAt: Date.now(), username: cleanUser };
+                        // Brand-new user: ALWAYS starts 100% empty with zero data from other users!
+                        const initialData = {
+                            ...getEmptyAppData(),
+                            password: password,
+                            createdAt: Date.now(),
+                            lastUpdated: Date.now(),
+                            username: cleanUser
+                        };
 
-                        // If user is Shelly, automatically migrate any data from legacy doc 'shelly_psychostreak'
-                        if (cleanUser === 'shelly') {
-                            try {
-                                const oldDoc = await db.collection('users').doc(LEGACY_CLOUD_DOC_ID).get();
-                                if (oldDoc.exists) {
-                                    const oldData = oldDoc.data() || {};
-                                    initialData.essays = mergeArraysById(initialData.essays, oldData.essays);
-                                    initialData.sections = mergeArraysById(initialData.sections, oldData.sections);
-                                    initialData.mentalMathLogs = mergeArraysById(initialData.mentalMathLogs, oldData.mentalMathLogs);
-                                    initialData.officialScores = mergeArraysById(initialData.officialScores, oldData.officialScores);
-                                    initialData.simulations = mergeArraysById(initialData.simulations, oldData.simulations);
-                                }
-                            } catch(e) {
-                                console.warn('Shelly migration error:', e);
-                            }
-                        }
-
-                        await userRef.set(initialData, { merge: true });
+                        await userRef.set(initialData);
                         loginAsUser(cleanUser, initialData);
-                        showToast(`חשבון חדש נוצר בהצלחה וסונכרן לענן! 🌸`, 'success');
+                        showToast(`חשבון חדש ונקי נוצר בהצלחה (${username})! 🌸`, 'success');
                     }
                 } else {
-                    // Offline fallback
-                    loginAsUser(cleanUser, { ...appData, password: password });
+                    const localUser = loadData(cleanUser);
+                    loginAsUser(cleanUser, { ...localUser, password: password, username: cleanUser });
                     showToast(`מחובר במצב מקומי (${cleanUser}) 💾`, 'info');
                 }
             } catch(err) {
                 console.warn('Login error:', err);
-                loginAsUser(cleanUser, { ...appData, password: password });
+                const localUser = loadData(cleanUser);
+                loginAsUser(cleanUser, { ...localUser, password: password, username: cleanUser });
                 showToast(`מחובר במצב מקומי (${cleanUser}) 💾`, 'info');
             } finally {
                 if (submitBtn) {
@@ -2027,16 +2039,14 @@
             activeUser = username;
             localStorage.setItem(USER_STORAGE_KEY, username);
 
+            // Reset appData strictly to this user's own data (never merge with previous user's memory!)
             if (cloudData) {
-                appData.essays = mergeArraysById(appData.essays, cloudData.essays);
-                appData.sections = mergeArraysById(appData.sections, cloudData.sections);
-                appData.mentalMathLogs = mergeArraysById(appData.mentalMathLogs, cloudData.mentalMathLogs);
-                appData.officialScores = mergeArraysById(appData.officialScores, cloudData.officialScores);
-                appData.simulations = mergeArraysById(appData.simulations, cloudData.simulations);
-                if (cloudData.examDate) appData.examDate = cloudData.examDate;
+                appData = sanitizeUserData(cloudData);
+            } else {
+                appData = loadData(username);
             }
 
-            localStorage.setItem(getActiveStorageKey(), JSON.stringify(appData));
+            localStorage.setItem(getActiveStorageKey(username), JSON.stringify(appData));
 
             updateUserInterface();
             document.getElementById('view-login').classList.add('hidden');
@@ -2055,6 +2065,7 @@
             activeUser = null;
             isAdminLoggedIn = false;
             adminImpersonating = false;
+            appData = getEmptyAppData();
             localStorage.removeItem(USER_STORAGE_KEY);
 
             document.getElementById('app-root').classList.add('hidden');
@@ -2072,7 +2083,9 @@
 
         function saveData(syncToCloud = true) {
             appData.lastUpdated = Date.now();
-            localStorage.setItem(getActiveStorageKey(), JSON.stringify(appData));
+            if (activeUser) {
+                localStorage.setItem(getActiveStorageKey(activeUser), JSON.stringify(appData));
+            }
             renderApp();
 
             if (syncToCloud && db && activeUser && !adminImpersonating) {
@@ -2081,7 +2094,7 @@
                 db.collection('users').doc(activeUser).set(appData, { merge: true })
                     .then(() => {
                         setSyncStatus('synced');
-                        setTimeout(() => { isSyncingToCloud = false; }, 300);
+                        setTimeout(() => { isSyncingToCloud = false; }, 250);
                     })
                     .catch(err => {
                         console.warn('Cloud sync error:', err);
@@ -2135,32 +2148,40 @@
                 setSyncStatus('synced');
 
                 if (doc.exists) {
-                    const cloudData = doc.data() || {};
-                    const mergedEssays = mergeArraysById(appData.essays, cloudData.essays);
-                    const mergedSections = mergeArraysById(appData.sections, cloudData.sections);
-                    const mergedMath = mergeArraysById(appData.mentalMathLogs, cloudData.mentalMathLogs);
-                    const mergedOfficial = mergeArraysById(appData.officialScores, cloudData.officialScores);
-                    const mergedSimulations = mergeArraysById(appData.simulations, cloudData.simulations);
+                    const cloudData = sanitizeUserData(doc.data() || {});
+                    if (!isSyncingToCloud) {
+                        const prevJson = JSON.stringify({
+                            e: appData.essays,
+                            s: appData.sections,
+                            m: appData.mentalMathLogs,
+                            o: appData.officialScores,
+                            sim: appData.simulations,
+                            d: appData.examDate
+                        });
+                        appData.essays = cloudData.essays;
+                        appData.sections = cloudData.sections;
+                        appData.mentalMathLogs = cloudData.mentalMathLogs;
+                        appData.officialScores = cloudData.officialScores;
+                        appData.simulations = cloudData.simulations;
+                        if (cloudData.examDate) appData.examDate = cloudData.examDate;
+                        appData.lastUpdated = cloudData.lastUpdated || Date.now();
+                        if (cloudData.password) appData.password = cloudData.password;
+                        if (cloudData.username) appData.username = cloudData.username;
 
-                    const hadChanges = mergedEssays.length !== (appData.essays || []).length ||
-                                       mergedSections.length !== (appData.sections || []).length ||
-                                       mergedMath.length !== (appData.mentalMathLogs || []).length ||
-                                       mergedOfficial.length !== (appData.officialScores || []).length ||
-                                       mergedSimulations.length !== (appData.simulations || []).length;
+                        localStorage.setItem(getActiveStorageKey(targetUser), JSON.stringify(appData));
+                        renderApp();
 
-                    appData.essays = mergedEssays;
-                    appData.sections = mergedSections;
-                    appData.mentalMathLogs = mergedMath;
-                    appData.officialScores = mergedOfficial;
-                    appData.simulations = mergedSimulations;
-                    if (cloudData.examDate) appData.examDate = cloudData.examDate;
-                    appData.lastUpdated = Math.max(appData.lastUpdated || 0, cloudData.lastUpdated || 0, Date.now());
-
-                    localStorage.setItem(getActiveStorageKey(), JSON.stringify(appData));
-                    renderApp();
-
-                    if (hadChanges && !isSyncingToCloud) {
-                        showToast('עודכן וסונכרן אוטומטית עם המכשיר השני ☁️✨', 'info');
+                        const nextJson = JSON.stringify({
+                            e: appData.essays,
+                            s: appData.sections,
+                            m: appData.mentalMathLogs,
+                            o: appData.officialScores,
+                            sim: appData.simulations,
+                            d: appData.examDate
+                        });
+                        if (prevJson !== nextJson) {
+                            showToast('עודכן וסונכרן בזמן אמת מהמכשיר השני ☁️✨', 'info');
+                        }
                     }
                 } else {
                     db.collection('users').doc(targetUser).set(appData, { merge: true }).catch(()=>{});
@@ -4292,25 +4313,23 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             if (activeUser) {
-                // User is already logged in
-                const cached = localStorage.getItem(getActiveStorageKey()) || localStorage.getItem(LEGACY_STORAGE_KEY);
-                if (cached) {
-                    try { appData = JSON.parse(cached); } catch(e){}
-                }
+                // User is already logged in - load strictly their own isolated data
+                appData = loadData(activeUser);
                 updateUserInterface();
                 document.getElementById('view-login').classList.add('hidden');
                 document.getElementById('app-root').classList.remove('hidden');
                 renderApp();
                 setupLiveCloudListener(activeUser);
             } else {
-                // Show login screen
+                // Show login screen with clean empty state
+                appData = getEmptyAppData();
                 document.getElementById('view-login').classList.remove('hidden');
                 document.getElementById('app-root').classList.add('hidden');
             }
 
             startBackgroundWatchdog();
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./sw.js?v=20261025_psychostreak_auth').catch(() => {});
+                navigator.serviceWorker.register('./sw.js?v=20261025_3').catch(() => {});
             }
         });
     </script>
