@@ -138,6 +138,10 @@
                     <span class="text-lg">🎯</span>
                     <span>דשבורד ראשי</span>
                 </button>
+                <button onclick="switchTab('simulations')" id="nav-btn-simulations" class="nav-btn flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-semibold transition-all active:scale-95 text-stone-600 hover:bg-stone-50 hover:text-stone-900">
+                    <span class="text-lg">🏆</span>
+                    <span>סימולציות וציונים</span>
+                </button>
                 <button onclick="switchTab('essays')" id="nav-btn-essays" class="nav-btn flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-semibold transition-all active:scale-95 text-stone-600 hover:bg-stone-50 hover:text-stone-900">
                     <span class="text-lg">✍️</span>
                     <span>חיבורים (2 בשבוע)</span>
@@ -205,25 +209,29 @@
         <!-- ============================================================= -->
         <!-- MOBILE BOTTOM NAVIGATION -->
         <!-- ============================================================= -->
-        <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-stone-200 z-40 pb-safe-bottom overflow-x-auto hide-scrollbar flex justify-around px-2 pt-2 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
-            <button onclick="switchTab('dashboard')" id="mob-nav-dashboard" class="mob-nav-btn flex flex-col items-center gap-1 py-1.5 px-3 rounded-2xl text-[11px] font-bold text-pink-700 bg-pink-50 flex-1">
-                <span class="text-lg">🎯</span>
+        <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-stone-200 z-40 pb-safe-bottom flex justify-between px-1 pt-1.5 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+            <button onclick="switchTab('dashboard')" id="mob-nav-dashboard" class="mob-nav-btn flex flex-col items-center gap-0.5 py-1 px-1 rounded-2xl text-[10px] font-bold text-pink-700 bg-pink-50 flex-1">
+                <span class="text-base">🎯</span>
                 <span>ראשי</span>
             </button>
-            <button onclick="switchTab('essays')" id="mob-nav-essays" class="mob-nav-btn flex flex-col items-center gap-1 py-1.5 px-3 rounded-2xl text-[11px] font-medium text-stone-500 hover:text-stone-800 flex-1">
-                <span class="text-lg">✍️</span>
+            <button onclick="switchTab('simulations')" id="mob-nav-simulations" class="mob-nav-btn flex flex-col items-center gap-0.5 py-1 px-1 rounded-2xl text-[10px] font-medium text-stone-500 hover:text-stone-800 flex-1">
+                <span class="text-base">🏆</span>
+                <span>סימולציות</span>
+            </button>
+            <button onclick="switchTab('essays')" id="mob-nav-essays" class="mob-nav-btn flex flex-col items-center gap-0.5 py-1 px-1 rounded-2xl text-[10px] font-medium text-stone-500 hover:text-stone-800 flex-1">
+                <span class="text-base">✍️</span>
                 <span>חיבורים</span>
             </button>
-            <button onclick="switchTab('sections')" id="mob-nav-sections" class="mob-nav-btn flex flex-col items-center gap-1 py-1.5 px-3 rounded-2xl text-[11px] font-medium text-stone-500 hover:text-stone-800 flex-1">
-                <span class="text-lg">⏱️</span>
+            <button onclick="switchTab('sections')" id="mob-nav-sections" class="mob-nav-btn flex flex-col items-center gap-0.5 py-1 px-1 rounded-2xl text-[10px] font-medium text-stone-500 hover:text-stone-800 flex-1">
+                <span class="text-base">⏱️</span>
                 <span>פרקים</span>
             </button>
-            <button onclick="switchTab('math')" id="mob-nav-math" class="mob-nav-btn flex flex-col items-center gap-1 py-1.5 px-3 rounded-2xl text-[11px] font-medium text-stone-500 hover:text-stone-800 flex-1">
-                <span class="text-lg">🧮</span>
+            <button onclick="switchTab('math')" id="mob-nav-math" class="mob-nav-btn flex flex-col items-center gap-0.5 py-1 px-1 rounded-2xl text-[10px] font-medium text-stone-500 hover:text-stone-800 flex-1">
+                <span class="text-base">🧮</span>
                 <span>חישוב</span>
             </button>
-            <button onclick="switchTab('analytics')" id="mob-nav-analytics" class="mob-nav-btn flex flex-col items-center gap-1 py-1.5 px-3 rounded-2xl text-[11px] font-medium text-stone-500 hover:text-stone-800 flex-1">
-                <span class="text-lg">📊</span>
+            <button onclick="switchTab('analytics')" id="mob-nav-analytics" class="mob-nav-btn flex flex-col items-center gap-0.5 py-1 px-1 rounded-2xl text-[10px] font-medium text-stone-500 hover:text-stone-800 flex-1">
+                <span class="text-base">📊</span>
                 <span>דיוק</span>
             </button>
         </nav>
@@ -422,6 +430,137 @@
                         <!-- Injected by JS -->
                     </div>
                 </div>
+            </div>
+
+            <!-- ========================================================= -->
+            <!-- TAB: SIMULATIONS & OFFICIAL EXAM SCORES (🏆) -->
+            <!-- ========================================================= -->
+            <div id="tab-simulations" class="tab-content hidden space-y-6 animate-fadeIn">
+
+                <!-- Hero Header -->
+                <div class="bg-gradient-to-br from-pink-500 via-rose-500 to-pink-600 text-white rounded-3xl p-6 md:p-8 shadow-xl shadow-pink-500/15 relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+                    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <div class="inline-flex items-center gap-2 bg-white/20 border border-white/30 text-white text-xs font-black px-3 py-1 rounded-full mb-2">
+                                <span>🏆</span> סימולציות מלאות וציוני עבר
+                            </div>
+                            <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight">
+                                היכל הסימולציות והציונים 🎯
+                            </h2>
+                            <p class="text-xs md:text-sm text-pink-100 mt-1 max-w-xl">
+                                תיעוד סימולציות מועד נוכחי מול סימולציות עבר, מעקב ציונים רשמיים ממועדים קודמים וחלוקת פרקים עד 150.
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <button onclick="openAddSimulationModal()" class="px-4 py-2.5 bg-white text-pink-700 hover:bg-pink-50 rounded-2xl font-bold text-xs md:text-sm shadow-md transition-all active:scale-95 flex items-center gap-1.5">
+                                <span>+</span> הזנת סימולציה
+                            </button>
+                            <button onclick="openAddOfficialScoreModal()" class="px-4 py-2.5 bg-black/20 hover:bg-black/30 border border-white/30 text-white rounded-2xl font-bold text-xs md:text-sm transition-all active:scale-95 flex items-center gap-1.5">
+                                <span>🏛️</span> ציון מועד קודם
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulation Analytics & Comparison Cards -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+                    <!-- Current Cycle Average -->
+                    <div class="bg-white p-4 md:p-5 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
+                        <div class="text-stone-400 text-xs font-semibold mb-1 flex items-center justify-between">
+                            <span>ממוצע מועד נוכחי</span>
+                            <span class="text-pink-500">🎯</span>
+                        </div>
+                        <div id="sim-stat-current-avg" class="text-2xl md:text-3xl font-black text-pink-600">--</div>
+                        <div id="sim-stat-current-count" class="text-[11px] font-bold text-stone-500 mt-0.5">0 סימולציות</div>
+                    </div>
+
+                    <!-- Previous Cycle Average -->
+                    <div class="bg-white p-4 md:p-5 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
+                        <div class="text-stone-400 text-xs font-semibold mb-1 flex items-center justify-between">
+                            <span>ממוצע סימולציות עבר</span>
+                            <span class="text-amber-500">⏳</span>
+                        </div>
+                        <div id="sim-stat-prev-avg" class="text-2xl md:text-3xl font-black text-stone-800">--</div>
+                        <div id="sim-stat-prev-count" class="text-[11px] font-bold text-stone-500 mt-0.5">0 סימולציות עבר</div>
+                    </div>
+
+                    <!-- Improvement Delta -->
+                    <div class="bg-white p-4 md:p-5 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
+                        <div class="text-stone-400 text-xs font-semibold mb-1 flex items-center justify-between">
+                            <span>מגמת שיפור</span>
+                            <span class="text-emerald-500">📈</span>
+                        </div>
+                        <div id="sim-stat-delta" class="text-2xl md:text-3xl font-black text-emerald-600">--</div>
+                        <div class="text-[11px] font-bold text-stone-500 mt-0.5">בהשוואה למועד קודם</div>
+                    </div>
+
+                    <!-- Peak Simulation Score -->
+                    <div class="bg-white p-4 md:p-5 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
+                        <div class="text-stone-400 text-xs font-semibold mb-1 flex items-center justify-between">
+                            <span>שיא כל הזמנים</span>
+                            <span class="text-rose-500">⭐</span>
+                        </div>
+                        <div id="sim-stat-peak" class="text-2xl md:text-3xl font-black text-rose-600">--</div>
+                        <div id="sim-stat-peak-name" class="text-[11px] font-bold text-stone-500 mt-0.5 truncate">טרם תועד</div>
+                    </div>
+                </div>
+
+                <!-- SECTION 1: OFFICIAL PAST EXAMS SCORES -->
+                <div class="bg-white p-6 md:p-8 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] space-y-5">
+                    <div class="flex items-center justify-between flex-wrap gap-2">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center text-xl shadow-2xs">
+                                🏛️
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-stone-900 leading-tight">ציוני פסיכומטרי ממועדים קודמים</h3>
+                                <p class="text-xs text-stone-500">ציונים רשמיים שהתקבלו מהמרכז הארצי (כולל פרקים עד 150)</p>
+                            </div>
+                        </div>
+                        <button onclick="openAddOfficialScoreModal()" class="px-3.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold rounded-xl text-xs transition-all active:scale-95 border border-amber-200 flex items-center gap-1">
+                            <span>+</span> הוסף ציון מועד
+                        </button>
+                    </div>
+
+                    <!-- List of Official Scores -->
+                    <div id="official-scores-list" class="space-y-3">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- SECTION 2: FULL SIMULATIONS TRACKER -->
+                <div class="bg-white p-6 md:p-8 rounded-3xl border border-stone-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] space-y-5">
+                    <div class="flex items-center justify-between flex-wrap gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-2xl bg-pink-50 text-pink-700 flex items-center justify-center text-xl shadow-2xs">
+                                📝
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-stone-900 leading-tight">מאגר סימולציות מלאות</h3>
+                                <p class="text-xs text-stone-500">מעקב מבחני מתכונת (מועד נוכחי מול מועדי עבר)</p>
+                            </div>
+                        </div>
+
+                        <!-- Filters & Add button -->
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <div class="inline-flex bg-stone-100 p-1 rounded-2xl text-xs font-bold text-stone-600">
+                                <button onclick="setSimFilter('all')" id="sim-flt-all" class="sim-flt-btn px-3 py-1.5 rounded-xl bg-white text-pink-700 shadow-2xs transition-all">הכל</button>
+                                <button onclick="setSimFilter('current')" id="sim-flt-current" class="sim-flt-btn px-3 py-1.5 rounded-xl text-stone-500 hover:text-stone-800 transition-all">מועד נוכחי 🎯</button>
+                                <button onclick="setSimFilter('previous')" id="sim-flt-previous" class="sim-flt-btn px-3 py-1.5 rounded-xl text-stone-500 hover:text-stone-800 transition-all">מועדי עבר ⏳</button>
+                            </div>
+                            <button onclick="openAddSimulationModal()" class="px-4 py-2 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold rounded-2xl text-xs transition-all active:scale-95 shadow-sm flex items-center gap-1.5">
+                                <span>+</span> הוסף סימולציה
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Simulations List -->
+                    <div id="simulations-list" class="space-y-3">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+
             </div>
 
             <!-- ========================================================= -->
@@ -1035,6 +1174,10 @@
                 <span class="text-xl">🧮</span>
                 <span class="text-right flex-1">סימון 15 דק' חישוב מהיר היום</span>
             </button>
+            <button onclick="closeModal('modal-quick-action'); openAddSimulationModal();" class="w-full p-4 bg-gradient-to-r from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 text-pink-900 rounded-2xl font-bold text-sm flex items-center gap-3 transition-all active:scale-95 border border-pink-200">
+                <span class="text-xl">🏆</span>
+                <span class="text-right flex-1">הזנת סימולציה מלאה (רב-תחומי ופרקים)</span>
+            </button>
         </div>
     </div>
 
@@ -1202,7 +1345,172 @@
     </div>
 
     <!-- Modal: Configure Exam Date -->
-        <!-- Modal: Dedicated Firebase Configuration -->
+        <!-- Modal: Add Full Simulation -->
+    <div id="modal-add-simulation" class="hidden fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-[85] flex items-end md:items-center justify-center p-0 md:p-4">
+        <div class="bg-white rounded-t-[32px] md:rounded-[32px] w-full max-w-lg p-6 md:p-8 shadow-2xl animate-popIn max-h-[90vh] overflow-y-auto custom-scrollbar pb-safe-bottom">
+            <div class="flex justify-between items-center mb-5">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-2xl bg-pink-100 text-pink-700 flex items-center justify-center text-xl">
+                        📝
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg md:text-xl text-stone-900 leading-tight">הזנת סימולציה מלאה</h3>
+                        <p class="text-xs text-stone-500">תיעוד מבחן מתכונת (רב-תחומי ופרקים)</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-add-simulation')" class="text-stone-400 hover:text-stone-600 bg-stone-100 p-2 rounded-full">✕</button>
+            </div>
+
+            <form onsubmit="handleSaveSimulation(event)" class="space-y-4">
+                <!-- Period Toggle -->
+                <div>
+                    <label class="text-xs font-bold text-stone-600 block mb-1.5">לאיזו תקופה שייכת הסימולציה?</label>
+                    <div class="grid grid-cols-2 gap-2 bg-stone-100 p-1.5 rounded-2xl">
+                        <button type="button" id="sim-period-btn-current" onclick="setSimModalPeriod('current')" class="py-2.5 rounded-xl text-xs font-bold transition-all bg-white text-pink-700 shadow-xs">
+                            🎯 מועד נוכחי (הכנה עכשווית)
+                        </button>
+                        <button type="button" id="sim-period-btn-previous" onclick="setSimModalPeriod('previous')" class="py-2.5 rounded-xl text-xs font-bold transition-all text-stone-500">
+                            ⏳ מועד קודם / עבר
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs font-bold text-stone-600 block mb-1">שם / מקור הסימולציה</label>
+                        <input type="text" id="sim-name-input" required placeholder="למשל: סימולציה 1 (מרכז ארצי סתיו 25)" class="w-full p-3 bg-stone-50 border border-stone-200 rounded-2xl text-xs font-semibold focus:border-pink-400 outline-none">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-stone-600 block mb-1">תאריך ביצוע</label>
+                        <input type="date" id="sim-date-input" required class="w-full p-3 bg-stone-50 border border-stone-200 rounded-2xl text-xs font-semibold focus:border-pink-400 outline-none">
+                    </div>
+                </div>
+
+                <!-- Total Multi-Domain Score (200-800) -->
+                <div>
+                    <label class="text-xs font-bold text-pink-700 block mb-1">
+                        ציון רב-תחומי משוער (200-800):
+                    </label>
+                    <div class="flex items-center gap-2">
+                        <input type="number" id="sim-total-input" min="200" max="800" required placeholder="680" class="w-full p-3 bg-pink-50/50 border border-pink-200 rounded-2xl text-2xl font-black text-center text-pink-900 focus:border-pink-500 outline-none">
+                    </div>
+                </div>
+
+                <!-- Section Scores up to 150 -->
+                <div class="p-3.5 bg-stone-50 rounded-2xl border border-stone-200/80 space-y-3">
+                    <div class="text-xs font-bold text-stone-700 flex items-center justify-between">
+                        <span>ציוני פרקים (עד 150 כל אחד - אופציונלי):</span>
+                        <span class="text-[10px] text-stone-400">טווח: 50-150</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div>
+                            <label class="text-[11px] font-bold text-stone-500 block mb-1">🧮 כמותי</label>
+                            <input type="number" id="sim-quant-input" min="50" max="150" placeholder="135" class="w-full p-2 bg-white border border-stone-200 rounded-xl text-center text-sm font-bold focus:border-pink-400 outline-none">
+                        </div>
+                        <div>
+                            <label class="text-[11px] font-bold text-stone-500 block mb-1">📖 מילולי</label>
+                            <input type="number" id="sim-verbal-input" min="50" max="150" placeholder="130" class="w-full p-2 bg-white border border-stone-200 rounded-xl text-center text-sm font-bold focus:border-pink-400 outline-none">
+                        </div>
+                        <div>
+                            <label class="text-[11px] font-bold text-stone-500 block mb-1">🔤 אנגלית</label>
+                            <input type="number" id="sim-english-input" min="50" max="150" placeholder="140" class="w-full p-2 bg-white border border-stone-200 rounded-xl text-center text-sm font-bold focus:border-pink-400 outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-stone-600 block mb-1">תחקור ומסקנות עיקריות</label>
+                    <textarea id="sim-notes-input" rows="2" placeholder="מה עבד מצוין? איפה אבדו נקודות? נקודות לשיפור לסימולציה הבאה..." class="w-full p-3 bg-stone-50 border border-stone-200 rounded-2xl text-xs font-medium focus:border-pink-400 outline-none"></textarea>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2">
+                    <button type="submit" class="flex-1 py-3.5 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white rounded-2xl font-bold text-sm shadow-md shadow-pink-500/20 active:scale-95 transition-all">
+                        שמירת סימולציה ✨
+                    </button>
+                    <button type="button" onclick="closeModal('modal-add-simulation')" class="px-5 py-3.5 bg-stone-100 hover:bg-stone-200 text-stone-600 font-bold rounded-2xl text-sm transition-all">
+                        ביטול
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Add Official Past Exam Score -->
+    <div id="modal-add-official-score" class="hidden fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-[85] flex items-end md:items-center justify-center p-0 md:p-4">
+        <div class="bg-white rounded-t-[32px] md:rounded-[32px] w-full max-w-lg p-6 md:p-8 shadow-2xl animate-popIn max-h-[90vh] overflow-y-auto custom-scrollbar pb-safe-bottom">
+            <div class="flex justify-between items-center mb-5">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center text-xl">
+                        🏛️
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg md:text-xl text-stone-900 leading-tight">תיעוד ציון פסיכומטרי ממועד קודם</h3>
+                        <p class="text-xs text-stone-500">ציון רשמי מהמרכז הארצי ופירוט פרקים (עד 150)</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-add-official-score')" class="text-stone-400 hover:text-stone-600 bg-stone-100 p-2 rounded-full">✕</button>
+            </div>
+
+            <form onsubmit="handleSaveOfficialScore(event)" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs font-bold text-stone-600 block mb-1">שם המועד</label>
+                        <input type="text" id="off-exam-name-input" required placeholder="למשל: מועד סתיו 2025" class="w-full p-3 bg-stone-50 border border-stone-200 rounded-2xl text-xs font-semibold focus:border-amber-400 outline-none">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-stone-600 block mb-1">תאריך הבחינה</label>
+                        <input type="date" id="off-date-input" class="w-full p-3 bg-stone-50 border border-stone-200 rounded-2xl text-xs font-semibold focus:border-amber-400 outline-none">
+                    </div>
+                </div>
+
+                <!-- Total Score -->
+                <div>
+                    <label class="text-xs font-bold text-amber-800 block mb-1">
+                        ציון רב-תחומי רשמי (200-800):
+                    </label>
+                    <input type="number" id="off-total-input" min="200" max="800" required placeholder="650" class="w-full p-3 bg-amber-50/60 border border-amber-200 rounded-2xl text-2xl font-black text-center text-amber-950 focus:border-amber-500 outline-none">
+                </div>
+
+                <!-- Section Scores up to 150 -->
+                <div class="p-3.5 bg-stone-50 rounded-2xl border border-stone-200 space-y-3">
+                    <div class="text-xs font-bold text-stone-700 flex items-center justify-between">
+                        <span>ציוני פרקים רשמיים (עד 150):</span>
+                        <span class="text-[10px] text-stone-400">חובה/אופציונלי</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div>
+                            <label class="text-[11px] font-bold text-stone-600 block mb-1">🧮 כמותי</label>
+                            <input type="number" id="off-quant-input" min="50" max="150" required placeholder="130" class="w-full p-2 bg-white border border-stone-200 rounded-xl text-center text-sm font-bold focus:border-amber-400 outline-none">
+                        </div>
+                        <div>
+                            <label class="text-[11px] font-bold text-stone-600 block mb-1">📖 מילולי</label>
+                            <input type="number" id="off-verbal-input" min="50" max="150" required placeholder="125" class="w-full p-2 bg-white border border-stone-200 rounded-xl text-center text-sm font-bold focus:border-amber-400 outline-none">
+                        </div>
+                        <div>
+                            <label class="text-[11px] font-bold text-stone-600 block mb-1">🔤 אנגלית</label>
+                            <input type="number" id="off-english-input" min="50" max="150" required placeholder="140" class="w-full p-2 bg-white border border-stone-200 rounded-xl text-center text-sm font-bold focus:border-amber-400 outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-stone-600 block mb-1">תובנות והערות מהמועד</label>
+                    <textarea id="off-notes-input" rows="2" placeholder="תובנות על הבחינה, מה לשמר ומה לתקן במועד הנוכחי..." class="w-full p-3 bg-stone-50 border border-stone-200 rounded-2xl text-xs font-medium focus:border-amber-400 outline-none"></textarea>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2">
+                    <button type="submit" class="flex-1 py-3.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-2xl font-bold text-sm shadow-md shadow-amber-500/20 active:scale-95 transition-all">
+                        שמירת ציעד מועד רשמי 🏛️
+                    </button>
+                    <button type="button" onclick="closeModal('modal-add-official-score')" class="px-5 py-3.5 bg-stone-100 hover:bg-stone-200 text-stone-600 font-bold rounded-2xl text-sm transition-all">
+                        ביטול
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Dedicated Firebase Configuration -->
     <div id="modal-firebase-config" class="hidden fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-[85] flex items-end md:items-center justify-center p-0 md:p-4">
         <div class="bg-white rounded-t-[32px] md:rounded-[32px] w-full max-w-lg p-6 md:p-8 shadow-2xl animate-popIn max-h-[90vh] overflow-y-auto custom-scrollbar pb-safe-bottom">
             <div class="flex justify-between items-center mb-5">
@@ -1425,17 +1733,25 @@
         const CLOUD_DOC_ID = 'shelly_psychostreak';
 
         function loadData() {
+            let data = null;
             try {
                 const saved = localStorage.getItem(STORAGE_KEY);
-                if (saved) return JSON.parse(saved);
+                if (saved) data = JSON.parse(saved);
             } catch(e) {}
-            return {
-                examDate: '2026-12-25',
-                essays: [],
-                mentalMathLogs: [],
-                sections: [],
-                lastUpdated: 0
-            };
+            if (!data || typeof data !== 'object') {
+                data = {
+                    examDate: '2026-12-25',
+                    essays: [],
+                    mentalMathLogs: [],
+                    sections: [],
+                    officialScores: [],
+                    simulations: [],
+                    lastUpdated: 0
+                };
+            }
+            if (!Array.isArray(data.officialScores)) data.officialScores = [];
+            if (!Array.isArray(data.simulations)) data.simulations = [];
+            return data;
         }
 
         let appData = loadData();
@@ -1660,7 +1976,351 @@
             return streak;
         }
 
+        
         // =============================================================
+        // SIMULATIONS & OFFICIAL EXAM SCORES LOGIC (🏆)
+        // =============================================================
+        let currentSimFilter = 'all';
+        let currentSimModalPeriod = 'current';
+
+        function setSimModalPeriod(period) {
+            currentSimModalPeriod = period;
+            const btnCur = document.getElementById('sim-period-btn-current');
+            const btnPrev = document.getElementById('sim-period-btn-previous');
+            if (period === 'current') {
+                if (btnCur) btnCur.className = 'py-2.5 rounded-xl text-xs font-bold transition-all bg-white text-pink-700 shadow-xs';
+                if (btnPrev) btnPrev.className = 'py-2.5 rounded-xl text-xs font-bold transition-all text-stone-500';
+            } else {
+                if (btnCur) btnCur.className = 'py-2.5 rounded-xl text-xs font-bold transition-all text-stone-500';
+                if (btnPrev) btnPrev.className = 'py-2.5 rounded-xl text-xs font-bold transition-all bg-white text-amber-700 shadow-xs';
+            }
+        }
+
+        function setSimFilter(flt) {
+            currentSimFilter = flt;
+            document.querySelectorAll('.sim-flt-btn').forEach(btn => {
+                btn.className = 'sim-flt-btn px-3 py-1.5 rounded-xl text-stone-500 hover:text-stone-800 transition-all';
+            });
+            const activeBtn = document.getElementById(`sim-flt-${flt}`);
+            if (activeBtn) {
+                activeBtn.className = 'sim-flt-btn px-3 py-1.5 rounded-xl bg-white text-pink-700 font-bold shadow-2xs transition-all';
+            }
+            renderSimulationsTab();
+        }
+
+        function openAddSimulationModal() {
+            setSimModalPeriod('current');
+            document.getElementById('sim-name-input').value = '';
+            document.getElementById('sim-date-input').value = toIso();
+            document.getElementById('sim-total-input').value = '';
+            document.getElementById('sim-quant-input').value = '';
+            document.getElementById('sim-verbal-input').value = '';
+            document.getElementById('sim-english-input').value = '';
+            document.getElementById('sim-notes-input').value = '';
+            openModal('modal-add-simulation');
+        }
+
+        function handleSaveSimulation(e) {
+            e.preventDefault();
+            const total = parseInt(document.getElementById('sim-total-input').value, 10);
+            if (isNaN(total) || total < 200 || total > 800) {
+                showToast('ציון רב-תחומי חייב להיות בין 200 ל-800', 'warning');
+                return;
+            }
+
+            const quant = parseInt(document.getElementById('sim-quant-input').value, 10);
+            const verbal = parseInt(document.getElementById('sim-verbal-input').value, 10);
+            const english = parseInt(document.getElementById('sim-english-input').value, 10);
+
+            const sim = {
+                id: 'sim_' + Date.now(),
+                name: document.getElementById('sim-name-input').value.trim() || 'סימולציית מתכונת',
+                period: currentSimModalPeriod,
+                date: document.getElementById('sim-date-input').value || toIso(),
+                totalScore: total,
+                quantScore: !isNaN(quant) ? quant : null,
+                verbalScore: !isNaN(verbal) ? verbal : null,
+                englishScore: !isNaN(english) ? english : null,
+                notes: document.getElementById('sim-notes-input').value.trim(),
+                createdAt: Date.now()
+            };
+
+            if (!Array.isArray(appData.simulations)) appData.simulations = [];
+            appData.simulations.unshift(sim);
+            playChime('chime');
+            closeModal('modal-add-simulation');
+            saveData(true);
+            showToast(`הסימולציה נשמרה בהצלחה! ציון: ${total} ✨🎯`, 'success');
+        }
+
+        function deleteSimulation(id) {
+            if (!confirm('האם למחוק סימולציה זו מהרשימה?')) return;
+            appData.simulations = (appData.simulations || []).filter(s => s.id !== id);
+            saveData(true);
+            showToast('הסימולציה נמחקה', 'info');
+        }
+
+        function openAddOfficialScoreModal() {
+            document.getElementById('off-exam-name-input').value = '';
+            document.getElementById('off-date-input').value = toIso();
+            document.getElementById('off-total-input').value = '';
+            document.getElementById('off-quant-input').value = '';
+            document.getElementById('off-verbal-input').value = '';
+            document.getElementById('off-english-input').value = '';
+            document.getElementById('off-notes-input').value = '';
+            openModal('modal-add-official-score');
+        }
+
+        function handleSaveOfficialScore(e) {
+            e.preventDefault();
+            const total = parseInt(document.getElementById('off-total-input').value, 10);
+            if (isNaN(total) || total < 200 || total > 800) {
+                showToast('ציון רב-תחומי רשמי חייב להיות בין 200 ל-800', 'warning');
+                return;
+            }
+
+            const quant = parseInt(document.getElementById('off-quant-input').value, 10);
+            const verbal = parseInt(document.getElementById('off-verbal-input').value, 10);
+            const english = parseInt(document.getElementById('off-english-input').value, 10);
+
+            if (isNaN(quant) || quant < 50 || quant > 150 ||
+                isNaN(verbal) || verbal < 50 || verbal > 150 ||
+                isNaN(english) || english < 50 || english > 150) {
+                showToast('כל ציוני הפרקים (כמותי, מילולי, אנגלית) חייבים להיות בין 50 ל-150', 'warning');
+                return;
+            }
+
+            const record = {
+                id: 'off_' + Date.now(),
+                examName: document.getElementById('off-exam-name-input').value.trim() || 'מועד פסיכומטרי קודם',
+                date: document.getElementById('off-date-input').value || toIso(),
+                totalScore: total,
+                quantScore: quant,
+                verbalScore: verbal,
+                englishScore: english,
+                notes: document.getElementById('off-notes-input').value.trim(),
+                createdAt: Date.now()
+            };
+
+            if (!Array.isArray(appData.officialScores)) appData.officialScores = [];
+            appData.officialScores.unshift(record);
+            playChime('chime');
+            closeModal('modal-add-official-score');
+            saveData(true);
+            showToast(`ציון המועד (${total}) נשמר בהצלחה! 🏛️✨`, 'success');
+        }
+
+        function deleteOfficialScore(id) {
+            if (!confirm('האם למחוק תיעוד מועד רשמי זה?')) return;
+            appData.officialScores = (appData.officialScores || []).filter(o => o.id !== id);
+            saveData(true);
+            showToast('ציון המועד נמחק', 'info');
+        }
+
+        function renderSimulationsTab() {
+            const sims = appData.simulations || [];
+            const officials = appData.officialScores || [];
+
+            // 1. KPI Analytics
+            const curSims = sims.filter(s => s.period === 'current');
+            const prevSims = sims.filter(s => s.period === 'previous');
+
+            const curAvg = curSims.length > 0
+                ? Math.round(curSims.reduce((sum, s) => sum + s.totalScore, 0) / curSims.length)
+                : null;
+            const prevAvg = prevSims.length > 0
+                ? Math.round(prevSims.reduce((sum, s) => sum + s.totalScore, 0) / prevSims.length)
+                : null;
+
+            // Update KPI elements
+            const elCurAvg = document.getElementById('sim-stat-current-avg');
+            const elCurCnt = document.getElementById('sim-stat-current-count');
+            if (elCurAvg) elCurAvg.innerText = curAvg ? curAvg : '--';
+            if (elCurCnt) elCurCnt.innerText = `${curSims.length} ${curSims.length === 1 ? 'סימולציה' : 'סימולציות'}`;
+
+            const elPrevAvg = document.getElementById('sim-stat-prev-avg');
+            const elPrevCnt = document.getElementById('sim-stat-prev-count');
+            if (elPrevAvg) elPrevAvg.innerText = prevAvg ? prevAvg : '--';
+            if (elPrevCnt) elPrevCnt.innerText = `${prevSims.length} ${prevSims.length === 1 ? 'סימולציית עבר' : 'סימולציות עבר'}`;
+
+            const elDelta = document.getElementById('sim-stat-delta');
+            if (elDelta) {
+                if (curAvg && prevAvg) {
+                    const delta = curAvg - prevAvg;
+                    if (delta > 0) {
+                        elDelta.innerText = `+${delta} נק' 🚀`;
+                        elDelta.className = 'text-2xl md:text-3xl font-black text-emerald-600';
+                    } else if (delta < 0) {
+                        elDelta.innerText = `${delta} נק'`;
+                        elDelta.className = 'text-2xl md:text-3xl font-black text-rose-600';
+                    } else {
+                        elDelta.innerText = 'ללא שינוי';
+                        elDelta.className = 'text-2xl md:text-3xl font-black text-stone-600';
+                    }
+                } else if (curAvg) {
+                    elDelta.innerText = 'מועד ראשון';
+                    elDelta.className = 'text-xl md:text-2xl font-black text-pink-600';
+                } else {
+                    elDelta.innerText = '--';
+                    elDelta.className = 'text-2xl md:text-3xl font-black text-stone-400';
+                }
+            }
+
+            // Peak score
+            let peakScore = 0;
+            let peakName = '';
+            sims.forEach(s => {
+                if (s.totalScore > peakScore) {
+                    peakScore = s.totalScore;
+                    peakName = s.name;
+                }
+            });
+            const elPeak = document.getElementById('sim-stat-peak');
+            const elPeakName = document.getElementById('sim-stat-peak-name');
+            if (elPeak) elPeak.innerText = peakScore > 0 ? peakScore : '--';
+            if (elPeakName) elPeakName.innerText = peakScore > 0 ? peakName : 'טרם תועד';
+
+            // 2. Render Official Past Scores List
+            const elOfficialsList = document.getElementById('official-scores-list');
+            if (elOfficialsList) {
+                if (officials.length === 0) {
+                    elOfficialsList.innerHTML = `
+                        <div class="p-6 bg-stone-50 rounded-2xl text-center border border-dashed border-stone-200">
+                            <span class="text-3xl block mb-2">🏛️</span>
+                            <div class="text-sm font-bold text-stone-700">טרם תועדו ציוני מועדים רשמיים קודמים</div>
+                            <p class="text-xs text-stone-400 mt-1 max-w-sm mx-auto">לחצי על "הוסף ציון מועד" כדי לתעד ציוני מרכז ארצי ממועדים קודמים כולל פירוט פרקים עד 150.</p>
+                        </div>
+                    `;
+                } else {
+                    elOfficialsList.innerHTML = officials.map(off => {
+                        const dateFormatted = off.date ? new Date(off.date).toLocaleDateString('he-IL', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+                        const qPct = Math.round(((off.quantScore || 50) / 150) * 100);
+                        const vPct = Math.round(((off.verbalScore || 50) / 150) * 100);
+                        const ePct = Math.round(((off.englishScore || 50) / 150) * 100);
+
+                        return `
+                            <div class="p-4 md:p-5 bg-gradient-to-br from-amber-50/40 via-white to-orange-50/30 rounded-3xl border border-amber-200/80 shadow-xs space-y-3">
+                                <div class="flex items-center justify-between flex-wrap gap-2">
+                                    <div class="flex items-center gap-2.5">
+                                        <span class="px-2.5 py-1 rounded-xl text-xs font-black bg-amber-100 text-amber-900 border border-amber-200">מועד רשמי</span>
+                                        <h4 class="font-bold text-base text-stone-900">${off.examName}</h4>
+                                        ${dateFormatted ? `<span class="text-xs text-stone-500">• ${dateFormatted}</span>` : ''}
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex items-center gap-1.5 bg-amber-500 text-white px-3.5 py-1.5 rounded-2xl shadow-xs">
+                                            <span class="text-xs font-medium opacity-90">רב-תחומי:</span>
+                                            <span class="text-xl font-black">${off.totalScore}</span>
+                                        </div>
+                                        <button onclick="deleteOfficialScore('${off.id}')" class="text-stone-400 hover:text-rose-600 p-1.5 rounded-xl hover:bg-stone-100 transition-colors" title="מחיקת מועד">✕</button>
+                                    </div>
+                                </div>
+
+                                <!-- 3 Sections Scores (up to 150) -->
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+                                    <!-- Quant -->
+                                    <div class="bg-white p-3 rounded-2xl border border-stone-200/80 shadow-2xs">
+                                        <div class="flex justify-between items-center text-xs font-bold text-stone-600 mb-1">
+                                            <span>🧮 חשיבה כמותית</span>
+                                            <span class="text-sm font-black text-rose-700">${off.quantScore || '--'} <span class="text-[10px] text-stone-400 font-normal">/ 150</span></span>
+                                        </div>
+                                        <div class="w-full bg-stone-100 rounded-full h-2 overflow-hidden">
+                                            <div class="bg-gradient-to-r from-rose-400 to-pink-500 h-full rounded-full" style="width: ${qPct}%"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Verbal -->
+                                    <div class="bg-white p-3 rounded-2xl border border-stone-200/80 shadow-2xs">
+                                        <div class="flex justify-between items-center text-xs font-bold text-stone-600 mb-1">
+                                            <span>📖 חשיבה מילולית</span>
+                                            <span class="text-sm font-black text-amber-800">${off.verbalScore || '--'} <span class="text-[10px] text-stone-400 font-normal">/ 150</span></span>
+                                        </div>
+                                        <div class="w-full bg-stone-100 rounded-full h-2 overflow-hidden">
+                                            <div class="bg-gradient-to-r from-amber-400 to-orange-500 h-full rounded-full" style="width: ${vPct}%"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- English -->
+                                    <div class="bg-white p-3 rounded-2xl border border-stone-200/80 shadow-2xs">
+                                        <div class="flex justify-between items-center text-xs font-bold text-stone-600 mb-1">
+                                            <span>🔤 אנגלית</span>
+                                            <span class="text-sm font-black text-blue-800">${off.englishScore || '--'} <span class="text-[10px] text-stone-400 font-normal">/ 150</span></span>
+                                        </div>
+                                        <div class="w-full bg-stone-100 rounded-full h-2 overflow-hidden">
+                                            <div class="bg-gradient-to-r from-blue-400 to-indigo-500 h-full rounded-full" style="width: ${ePct}%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                ${off.notes ? `<div class="text-xs text-stone-600 bg-amber-50/50 p-2.5 rounded-xl border border-amber-100/70 font-medium"><span class="font-bold text-amber-900">תובנות:</span> ${off.notes}</div>` : ''}
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+
+            // 3. Render Full Simulations List
+            const elSimsList = document.getElementById('simulations-list');
+            if (elSimsList) {
+                const filtered = sims.filter(s => {
+                    if (currentSimFilter === 'current') return s.period === 'current';
+                    if (currentSimFilter === 'previous') return s.period === 'previous';
+                    return true;
+                });
+
+                if (filtered.length === 0) {
+                    elSimsList.innerHTML = `
+                        <div class="p-6 bg-stone-50 rounded-2xl text-center border border-dashed border-stone-200">
+                            <span class="text-3xl block mb-2">📝</span>
+                            <div class="text-sm font-bold text-stone-700">אין סימולציות להצגה בקטגוריה זו</div>
+                            <p class="text-xs text-stone-400 mt-1 max-w-sm mx-auto">לחצי על "הוסף סימולציה" כדי לתעד סימולציות מלאות מהמועד הנוכחי או מתקופות קודמות.</p>
+                        </div>
+                    `;
+                } else {
+                    elSimsList.innerHTML = filtered.map(s => {
+                        const isCur = s.period === 'current';
+                        const dateFormatted = s.date ? new Date(s.date).toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '';
+                        const hasSections = s.quantScore || s.verbalScore || s.englishScore;
+
+                        return `
+                            <div class="p-4 md:p-5 bg-white rounded-3xl border ${isCur ? 'border-pink-200/80 shadow-xs' : 'border-stone-200/80'} space-y-2.5 transition-all hover:border-pink-300">
+                                <div class="flex items-center justify-between flex-wrap gap-2">
+                                    <div class="flex items-center gap-2">
+                                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black ${isCur ? 'bg-pink-100 text-pink-800 border border-pink-200' : 'bg-stone-100 text-stone-700 border border-stone-200'}">
+                                            ${isCur ? '🎯 מועד נוכחי' : '⏳ מועד קודם'}
+                                        </span>
+                                        <h4 class="font-bold text-base text-stone-900">${s.name}</h4>
+                                        ${dateFormatted ? `<span class="text-xs text-stone-400 font-medium">• ${dateFormatted}</span>` : ''}
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <div class="text-right">
+                                            <span class="text-xs text-stone-400 block -mb-1">ציון רב-תחומי:</span>
+                                            <span class="text-2xl font-black ${isCur ? 'text-pink-600' : 'text-stone-800'}">${s.totalScore}</span>
+                                        </div>
+                                        <button onclick="deleteSimulation('${s.id}')" class="text-stone-400 hover:text-rose-600 p-1.5 rounded-xl hover:bg-stone-100 transition-colors" title="מחיקת סימולציה">✕</button>
+                                    </div>
+                                </div>
+
+                                ${hasSections ? `
+                                    <div class="flex items-center gap-2 flex-wrap pt-1 text-xs">
+                                        ${s.quantScore ? `<span class="px-2.5 py-1 rounded-xl bg-pink-50 text-pink-900 border border-pink-200 font-bold">🧮 כמותי: <span class="font-black">${s.quantScore}</span>/150</span>` : ''}
+                                        ${s.verbalScore ? `<span class="px-2.5 py-1 rounded-xl bg-amber-50 text-amber-900 border border-amber-200 font-bold">📖 מילולי: <span class="font-black">${s.verbalScore}</span>/150</span>` : ''}
+                                        ${s.englishScore ? `<span class="px-2.5 py-1 rounded-xl bg-blue-50 text-blue-900 border border-blue-200 font-bold">🔤 אנגלית: <span class="font-black">${s.englishScore}</span>/150</span>` : ''}
+                                    </div>
+                                ` : ''}
+
+                                ${s.notes ? `
+                                    <div class="text-xs text-stone-600 bg-stone-50 p-2.5 rounded-xl border border-stone-200/70 font-medium">
+                                        <span class="font-bold text-stone-800">תחקור ומסקנות:</span> ${s.notes}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+        }
+
+// =============================================================
         // TAB SWITCHING
         // =============================================================
         let currentTab = 'dashboard';
@@ -2409,6 +3069,7 @@
 
                         // 7. Enhanced Analytics & Week-over-Week Tracker (StudyStreak Style)
             renderAnalyticsSection();
+            renderSimulationsTab();
 
             // 8. Dashboard Recent Activity List
             const recentActs = [];
